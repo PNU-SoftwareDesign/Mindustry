@@ -97,8 +97,8 @@ public class Weathers implements ContentList{
             drawParticles = false;
             drawNoise = true;
             useWindVector = false;
-            xspeed = 1f;
-            yspeed = 0.01f;
+            xSpeed = 1f;
+            ySpeed = 0.01f;
             attrs.set(Attribute.light, -0.3f);
             attrs.set(Attribute.water, 0.05f);
             opacityMultiplier = 0.47f;
