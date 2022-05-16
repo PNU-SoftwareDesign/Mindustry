@@ -114,7 +114,7 @@ public class Weather extends UnlockableContent{
     public static void drawParticles(TextureRegion region, Color color,
                               float sizeMin, float sizeMax,
                               float density, float intensity, float opacity,
-                              float windx, float windy,
+                              float windX, float windY,
                               float minAlpha, float maxAlpha,
                               float sinSclMin, float sinSclMax, float sinMagMin, float sinMagMax,
                               boolean randomParticleRotation){
@@ -129,8 +129,8 @@ public class Weather extends UnlockableContent{
             float scl = rand.random(0.5f, 1f);
             float scl2 = rand.random(0.5f, 1f);
             float size = rand.random(sizeMin, sizeMax);
-            float x = (rand.random(0f, world.unitWidth()) + Time.time * windx * scl2);
-            float y = (rand.random(0f, world.unitHeight()) + Time.time * windy * scl);
+            float x = (rand.random(0f, world.unitWidth()) + Time.time * windX * scl2);
+            float y = (rand.random(0f, world.unitHeight()) + Time.time * windY * scl);
             float alpha = rand.random(minAlpha, maxAlpha);
             float rotation = randomParticleRotation ? rand.random(0f, 360f) : 0f;
 
@@ -252,14 +252,14 @@ public class Weather extends UnlockableContent{
         Draw.tint(color);
 
         float speed = baseSpeed * intensity;
-        float windx = vWindX * speed, windy = vWindY * speed;
+        float windX = vWindX * speed, windY = vWindY * speed;
 
         float scale = 1f / noiseScl;
         float scroll = Time.time * scale + offset;
         Tmp.tr1.texture = noise;
         Core.camera.bounds(Tmp.r1);
         Tmp.tr1.set(Tmp.r1.x*scale, Tmp.r1.y*scale, (Tmp.r1.x + Tmp.r1.width)*scale, (Tmp.r1.y + Tmp.r1.height)*scale);
-        Tmp.tr1.scroll(-windx * scroll, -windy * scroll);
+        Tmp.tr1.scroll(-windX * scroll, -windY * scroll);
         Draw.rect(Tmp.tr1, Core.camera.position.x, Core.camera.position.y, Core.camera.width, -Core.camera.height);
     }
 
