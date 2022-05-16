@@ -152,7 +152,7 @@ public class Weather extends UnlockableContent{
         Draw.reset();
     }
 
-    public static void drawRain(float sizeMin, float sizeMax, float xspeed, float yspeed, float density, float intensity, float stroke, Color color){
+    public static void drawRain(float sizeMin, float sizeMax, float xSpeed, float ySpeed, float density, float intensity, float stroke, Color color){
         rand.setSeed(0);
         float padding = sizeMax*0.9f;
 
@@ -168,8 +168,8 @@ public class Weather extends UnlockableContent{
             float scl = rand.random(0.5f, 1f);
             float scl2 = rand.random(0.5f, 1f);
             float size = rand.random(sizeMin, sizeMax);
-            float x = (rand.random(0f, world.unitWidth()) + Time.time * xspeed * scl2);
-            float y = (rand.random(0f, world.unitHeight()) - Time.time * yspeed * scl);
+            float x = (rand.random(0f, world.unitWidth()) + Time.time * xSpeed * scl2);
+            float y = (rand.random(0f, world.unitHeight()) - Time.time * ySpeed * scl);
             float tint = rand.random(1f) * alpha;
 
             x -= Tmp.r1.x;
@@ -181,7 +181,7 @@ public class Weather extends UnlockableContent{
 
             if(Tmp.r3.setCentered(x, y, size).overlaps(Tmp.r2)){
                 Draw.alpha(tint);
-                Lines.lineAngle(x, y, Angles.angle(xspeed * scl2, - yspeed * scl), size/2f);
+                Lines.lineAngle(x, y, Angles.angle(xSpeed * scl2, - ySpeed * scl), size/2f);
             }
         }
     }
@@ -233,12 +233,12 @@ public class Weather extends UnlockableContent{
         }
     }
 
-    public static void drawNoiseLayers(Texture noise, Color color, float noisescl, float opacity, float baseSpeed, float intensity, float vwindx, float vwindy,
+    public static void drawNoiseLayers(Texture noise, Color color, float noiseScl, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY,
                                        int layers, float layerSpeedM , float layerAlphaM, float layerSclM, float layerColorM){
         float sspeed = 1f, sscl = 1f, salpha = 1f, offset = 0f;
         Color col = Tmp.c1.set(color);
         for(int i = 0; i < layers; i++){
-            drawNoise(noise, col, noisescl * sscl, salpha * opacity, sspeed * baseSpeed, intensity, vwindx, vwindy, offset);
+            drawNoise(noise, col, noiseScl * sscl, salpha * opacity, sspeed * baseSpeed, intensity, vWindX, vWindY, offset);
             sspeed *= layerSpeedM;
             salpha *= layerAlphaM;
             sscl *= layerSclM;
@@ -247,14 +247,14 @@ public class Weather extends UnlockableContent{
         }
     }
 
-    public static void drawNoise(Texture noise, Color color, float noisescl, float opacity, float baseSpeed, float intensity, float vwindx, float vwindy, float offset){
+    public static void drawNoise(Texture noise, Color color, float noiseScl, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY, float offset){
         Draw.alpha(opacity);
         Draw.tint(color);
 
         float speed = baseSpeed * intensity;
-        float windx = vwindx * speed, windy = vwindy * speed;
+        float windx = vWindX * speed, windy = vWindY * speed;
 
-        float scale = 1f / noisescl;
+        float scale = 1f / noiseScl;
         float scroll = Time.time * scale + offset;
         Tmp.tr1.texture = noise;
         Core.camera.bounds(Tmp.r1);
