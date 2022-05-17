@@ -24,7 +24,7 @@ import static mindustry.Vars.*;
 public class Weapon implements Cloneable{
     /** temporary weapon sequence number */
     static int sequenceNum = 0;
-    
+
     /** displayed weapon region */
     public String name;
     /** bullet shot */
@@ -161,7 +161,7 @@ public class Weapon implements Cloneable{
             weaponRotation);
         }
     }
-    
+
     public void draw(Unit unit, WeaponMount mount){
         //apply layer offset, roll it back at the end
         float z = Draw.z();
@@ -203,64 +203,58 @@ public class Weapon implements Cloneable{
     }
 
     public void update(Unit unit, WeaponMount mount){
-        boolean can = unit.canShoot();
         float lastReload = mount.reload;
         mount.reload = Math.max(mount.reload - Time.delta * unit.reloadMultiplier, 0);
         mount.recoil = Mathf.approachDelta(mount.recoil, 0, (Math.abs(recoil) * unit.reloadMultiplier) / recoilTime);
 
-        //rotate if applicable
-        if(rotate && (mount.rotate || mount.shoot) && can){
-            float axisX = unit.x + Angles.trnsx(unit.rotation - 90,  x, y),
-            axisY = unit.y + Angles.trnsy(unit.rotation - 90,  x, y);
-
-            mount.targetRotation = Angles.angle(axisX, axisY, mount.aimX, mount.aimY) - unit.rotation;
-            mount.rotation = Angles.moveToward(mount.rotation, mount.targetRotation, rotateSpeed * Time.delta);
-        }else if(!rotate){
-            mount.rotation = 0;
-            mount.targetRotation = unit.angleTo(mount.aimX, mount.aimY);
-        }
+        rotateWeapon(unit, mount);
 
         float
         weaponRotation = unit.rotation - 90 + (rotate ? mount.rotation : 0),
         mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
-        mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y),
-        bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY),
-        bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY),
-        shootAngle = rotate ? weaponRotation + 90 : Angles.angle(bulletX, bulletY, mount.aimX, mount.aimY) + (unit.rotation - unit.angleTo(mount.aimX, mount.aimY));
+        mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
 
-        //find a new target
-        if(!controllable && autoTarget){
-            if((mount.retarget -= Time.delta) <= 0f){
-                mount.target = findTarget(unit, mountX, mountY, bullet.range(), bullet.collidesAir, bullet.collidesGround);
-                mount.retarget = mount.target == null ? targetInterval : targetSwitchInterval;
-            }
+        findNewTarget(unit, mount, mountX, mountY);
+        updateContinuousState(unit, mount, weaponRotation, mountX, mountY);
 
-            if(mount.target != null && checkTarget(unit, mount.target, mountX, mountY, bullet.range())){
-                mount.target = null;
-            }
-
-            boolean shoot = false;
-
-            if(mount.target != null){
-                shoot = mount.target.within(mountX, mountY, bullet.range() + Math.abs(shootY) + (mount.target instanceof Sized s ? s.hitSize()/2f : 0f)) && can;
-
-                if(predictTarget){
-                    Vec2 to = Predict.intercept(unit, mount.target, bullet.speed);
-                    mount.aimX = to.x;
-                    mount.aimY = to.y;
-                }else{
-                    mount.aimX = mount.target.x();
-                    mount.aimY = mount.target.y();
-                }
-            }
-
-            mount.shoot = mount.rotate = shoot;
-
-            //note that shooting state is not affected, as these cannot be controlled
-            //logic will return shooting as false even if these return true, which is fine
+        if(otherSide != -1 && alternate && mount.side == flipSprite && mount.reload <= reload / 2f && lastReload > reload / 2f){
+            unit.mounts[otherSide].side = !unit.mounts[otherSide].side;
+            mount.side = !mount.side;
         }
 
-        //update continuous state
+        shoot(unit, mount, weaponRotation, mountX, mountY);
+    }
+
+    private void shoot(Unit unit, WeaponMount mount, float weaponRotation, float mountX, float mountY){
+        float bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY);
+        float bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY);
+        float shootAngle = rotate ? weaponRotation + 90 : Angles.angle(bulletX, bulletY, mount.aimX, mount.aimY) + (unit.rotation - unit.angleTo(mount.aimX, mount.aimY));
+        boolean wasFlipped = mount.side;
+        boolean checkAmmo = (!useAmmo || unit.ammo > 0 || !state.rules.unitAmmo || unit.team.rules().infiniteAmmo);
+        boolean reloaded = mount.reload <= 0.0001f;
+        boolean shootable = mount.shoot &&
+        unit.canShoot() &&
+        checkAmmo &&
+        reloaded &&
+        (!alternate || wasFlipped == flipSprite) &&
+        unit.vel.len() >= minShootVelocity &&
+        Angles.within(rotate ? mount.rotation : unit.rotation, mount.targetRotation, shootCone);
+
+        if(shootable){
+            shoot(unit, mount, bulletX, bulletY, mount.aimX, mount.aimY, mountX, mountY, shootAngle, Mathf.sign(x));
+
+            mount.reload = reload;
+
+            if(useAmmo){
+                unit.ammo--;
+                if(unit.ammo < 0) unit.ammo = 0;
+            }
+        }
+    }
+
+    private void updateContinuousState(Unit unit, WeaponMount mount, float weaponRotation, float mountX, float mountY){
+        float bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY);
+        float bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY);
         if(continuous && mount.bullet != null){
             if(!mount.bullet.isAdded() || mount.bullet.time >= mount.bullet.lifetime || mount.bullet.type != bullet){
                 mount.bullet = null;
@@ -283,31 +277,51 @@ public class Weapon implements Cloneable{
                 mount.sound.update(bulletX, bulletY, false);
             }
         }
+    }
 
-        //flip weapon shoot side for alternating weapons
-        boolean wasFlipped = mount.side;
-        if(otherSide != -1 && alternate && mount.side == flipSprite && mount.reload <= reload / 2f && lastReload > reload / 2f){
-            unit.mounts[otherSide].side = !unit.mounts[otherSide].side;
-            mount.side = !mount.side;
-        }
-
-        //shoot if applicable
-        if(mount.shoot && //must be shooting
-        can && //must be able to shoot
-        (!useAmmo || unit.ammo > 0 || !state.rules.unitAmmo || unit.team.rules().infiniteAmmo) && //check ammo
-        (!alternate || wasFlipped == flipSprite) &&
-        unit.vel.len() >= minShootVelocity && //check velocity requirements
-        mount.reload <= 0.0001f && //reload has to be 0
-        Angles.within(rotate ? mount.rotation : unit.rotation, mount.targetRotation, shootCone) //has to be within the cone
-        ){
-            shoot(unit, mount, bulletX, bulletY, mount.aimX, mount.aimY, mountX, mountY, shootAngle, Mathf.sign(x));
-
-            mount.reload = reload;
-
-            if(useAmmo){
-                unit.ammo--;
-                if(unit.ammo < 0) unit.ammo = 0;
+    private void findNewTarget(Unit unit, WeaponMount mount, float mountX, float mountY){
+        if(!controllable && autoTarget){
+            if((mount.retarget -= Time.delta) <= 0f){
+                mount.target = findTarget(unit, mountX, mountY, bullet.range(), bullet.collidesAir, bullet.collidesGround);
+                mount.retarget = mount.target == null ? targetInterval : targetSwitchInterval;
             }
+
+            if(mount.target != null && checkTarget(unit, mount.target, mountX, mountY, bullet.range())){
+                mount.target = null;
+            }
+
+            boolean shoot = false;
+
+            if(mount.target != null){
+                shoot = mount.target.within(mountX, mountY, bullet.range() + Math.abs(shootY) + (mount.target instanceof Sized s ? s.hitSize()/2f : 0f)) && unit.canShoot();
+
+                if(predictTarget){
+                    Vec2 to = Predict.intercept(unit, mount.target, bullet.speed);
+                    mount.aimX = to.x;
+                    mount.aimY = to.y;
+                }else{
+                    mount.aimX = mount.target.x();
+                    mount.aimY = mount.target.y();
+                }
+            }
+
+            mount.shoot = mount.rotate = shoot;
+
+            //note that shooting state is not affected, as these cannot be controlled
+            //logic will return shooting as false even if these return true, which is fine
+        }
+    }
+
+    private void rotateWeapon(Unit unit, WeaponMount mount){
+        if(rotate && (mount.rotate || mount.shoot) && unit.canShoot()){
+            float axisX = unit.x + Angles.trnsx(unit.rotation - 90,  x, y),
+            axisY = unit.y + Angles.trnsy(unit.rotation - 90,  x, y);
+
+            mount.targetRotation = Angles.angle(axisX, axisY, mount.aimX, mount.aimY) - unit.rotation;
+            mount.rotation = Angles.moveToward(mount.rotation, mount.targetRotation, rotateSpeed * Time.delta);
+        }else if(!rotate){
+            mount.rotation = 0;
+            mount.targetRotation = unit.angleTo(mount.aimX, mount.aimY);
         }
     }
 
