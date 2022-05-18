@@ -289,8 +289,8 @@ public class BaseAI{
 
                 if(tile == null || !tile.block().alwaysReplace) continue;
 
-                boolean any = false;
-
+                boolean isWall = true;
+                
                 for(Point2 p : Geometry.d8){
                     if(Angles.angleDist(Angles.angle(p.x, p.y), spawn.angleTo(tile)) > 70){
                         continue;
@@ -302,12 +302,12 @@ public class BaseAI{
                     }
 
                     if(o != null && o.team() == data.team && !(o.block() instanceof Wall)){
-                        any = true;
+                        isWall = false;
                     }
                 }
 
                 tmpTiles.clear();
-                if(any && Build.validPlace(wall, data.team, tile.x, tile.y, 0) && !tile.getLinkedTilesAs(wall, tmpTiles).contains(t -> path.contains(t.pos()))){
+                if(!isWall && Build.validPlace(wall, data.team, tile.x, tile.y, 0) && !tile.getLinkedTilesAs(wall, tmpTiles).contains(t -> path.contains(t.pos()))){
                     data.blocks.add(new BlockPlan(tile.x, tile.y, (short)0, wall.id, null));
                 }
             }
