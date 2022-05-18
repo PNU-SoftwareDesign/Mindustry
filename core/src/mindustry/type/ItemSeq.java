@@ -70,10 +70,8 @@ public class ItemSeq implements Iterable<ItemStack>, JsonSerializable{
         return result;
     }
 
-    public void min(int number){
-        for(Item item : Vars.content.items()){
-            set(item, Math.min(get(item), number));
-        }
+    public void setMinEach(int number){
+        applyEach((item, amount) -> set(item, Math.min(get(item), number)));
     }
 
     public boolean has(Item item){

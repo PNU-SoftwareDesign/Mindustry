@@ -47,7 +47,7 @@ public class LaunchLoadoutDialog extends BaseDialog{
 
             //cap resources based on core type
             ItemSeq resources = universe.getLaunchResources();
-            resources.min(cap);
+            resources.setMinEach(cap);
             universe.updateLaunchResources(resources);
 
             total.clear();
