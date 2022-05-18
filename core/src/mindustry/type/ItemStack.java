@@ -36,7 +36,7 @@ public class ItemStack implements Comparable<ItemStack>{
         return other != null && other.item == item && other.amount == amount;
     }
 
-    public static ItemStack[] mult(ItemStack[] stacks, float amount){
+    public static ItemStack[] multiply(ItemStack[] stacks, float amount){
         var copy = new ItemStack[stacks.length];
         for(int i = 0; i < copy.length; i++){
             copy[i] = new ItemStack(stacks[i].item, Mathf.round(stacks[i].amount * amount));
@@ -44,7 +44,7 @@ public class ItemStack implements Comparable<ItemStack>{
         return copy;
     }
 
-    public static ItemStack[] with(Object... items){
+    public static ItemStack[] build(Object... items){
         var stacks = new ItemStack[items.length / 2];
         for(int i = 0; i < items.length; i += 2){
             stacks[i / 2] = new ItemStack((Item)items[i], ((Number)items[i + 1]).intValue());
