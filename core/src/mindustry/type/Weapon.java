@@ -150,12 +150,12 @@ public class Weapon implements Cloneable{
         float
         rotation = unit.rotation - 90,
         weaponRotation  = rotation + (rotate ? mount.rotation : 0),
-        wx = unit.x + Angles.trnsx(rotation, x, y) + Angles.trnsx(weaponRotation, 0, -mount.recoil),
-        wy = unit.y + Angles.trnsy(rotation, x, y) + Angles.trnsy(weaponRotation, 0, -mount.recoil);
+        wX = unit.x + Angles.trnsx(rotation, x, y) + Angles.trnsx(weaponRotation, 0, -mount.recoil),
+        wY = unit.y + Angles.trnsy(rotation, x, y) + Angles.trnsy(weaponRotation, 0, -mount.recoil);
 
         if(outlineRegion.found()){
             Draw.rect(outlineRegion,
-            wx, wy,
+            wX, wY,
             outlineRegion.width * Draw.scl * -Mathf.sign(flipSprite),
             outlineRegion.height * Draw.scl,
             weaponRotation);
@@ -170,11 +170,11 @@ public class Weapon implements Cloneable{
         float
         rotation = unit.rotation - 90,
         weaponRotation  = rotation + (rotate ? mount.rotation : 0),
-        wx = unit.x + Angles.trnsx(rotation, x, y) + Angles.trnsx(weaponRotation, 0, -mount.recoil),
-        wy = unit.y + Angles.trnsy(rotation, x, y) + Angles.trnsy(weaponRotation, 0, -mount.recoil);
+        wX = unit.x + Angles.trnsx(rotation, x, y) + Angles.trnsx(weaponRotation, 0, -mount.recoil),
+        wY = unit.y + Angles.trnsy(rotation, x, y) + Angles.trnsy(weaponRotation, 0, -mount.recoil);
 
         if(shadow > 0){
-            Drawf.shadow(wx, wy, shadow);
+            Drawf.shadow(wX, wY, shadow);
         }
 
         if(top){
@@ -182,7 +182,7 @@ public class Weapon implements Cloneable{
         }
 
         Draw.rect(region,
-        wx, wy,
+        wX, wY,
         region.width * Draw.scl * -Mathf.sign(flipSprite),
         region.height * Draw.scl,
         weaponRotation);
@@ -191,7 +191,7 @@ public class Weapon implements Cloneable{
             Draw.color(heatColor, mount.heat);
             Draw.blend(Blending.additive);
             Draw.rect(heatRegion,
-            wx, wy,
+            wX, wY,
             heatRegion.width * Draw.scl * -Mathf.sign(flipSprite),
             heatRegion.height * Draw.scl,
             weaponRotation);

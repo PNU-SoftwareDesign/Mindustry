@@ -235,13 +235,13 @@ public class Weather extends UnlockableContent{
 
     public static void drawNoiseLayers(Texture noise, Color color, float noiseScl, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY,
                                        int layers, float layerSpeedM , float layerAlphaM, float layerSclM, float layerColorM){
-        float sspeed = 1f, sscl = 1f, salpha = 1f, offset = 0f;
+        float sSpeed = 1f, sScl = 1f, sAlpha = 1f, offset = 0f;
         Color col = Tmp.c1.set(color);
         for(int i = 0; i < layers; i++){
-            drawNoise(noise, col, noiseScl * sscl, salpha * opacity, sspeed * baseSpeed, intensity, vWindX, vWindY, offset);
-            sspeed *= layerSpeedM;
-            salpha *= layerAlphaM;
-            sscl *= layerSclM;
+            drawNoise(noise, col, noiseScl * sScl, sAlpha * opacity, sSpeed * baseSpeed, intensity, vWindX, vWindY, offset);
+            sSpeed *= layerSpeedM;
+            sAlpha *= layerAlphaM;
+            sScl *= layerSclM;
             offset += 0.29f;
             col.mul(layerColorM);
         }

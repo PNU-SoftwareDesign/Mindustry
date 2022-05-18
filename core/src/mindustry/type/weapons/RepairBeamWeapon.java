@@ -108,11 +108,11 @@ public class RepairBeamWeapon extends Weapon{
 
         float
         weaponRotation = unit.rotation - 90,
-        wx = unit.x + Angles.trnsx(weaponRotation, x, y),
-        wy = unit.y + Angles.trnsy(weaponRotation, x, y);
+        wX = unit.x + Angles.trnsx(weaponRotation, x, y),
+        wY = unit.y + Angles.trnsy(weaponRotation, x, y);
 
         float z = Draw.z();
-        RepairPoint.drawBeam(wx, wy, unit.rotation + mount.rotation, shootY, unit.id, mount.target == null ? null : (Sized)mount.target, unit.team, heal.strength,
+        RepairPoint.drawBeam(wX, wY, unit.rotation + mount.rotation, shootY, unit.id, mount.target == null ? null : (Sized)mount.target, unit.team, heal.strength,
             pulseStroke, pulseRadius, beamWidth, heal.lastEnd, heal.offset, laserColor, laserTopColor,
             laser, laserEnd, laserTop, laserTopEnd);
         Draw.z(z);
