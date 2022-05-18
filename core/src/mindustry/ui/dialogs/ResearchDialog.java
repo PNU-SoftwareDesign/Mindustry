@@ -63,7 +63,7 @@ public class ResearchDialog extends BaseDialog{
                             if(sector.hasBase()){
                                 ItemSeq cached = sector.items();
                                 cache.put(sector, cached);
-                                cached.each((item, amount) -> {
+                                cached.applyEach((item, amount) -> {
                                     values[item.id] += Math.max(amount, 0);
                                     total += Math.max(amount, 0);
                                 });

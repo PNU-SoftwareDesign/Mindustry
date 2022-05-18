@@ -248,7 +248,7 @@ public class ItemModule extends BlockModule{
     }
 
     public void add(ItemSeq stacks){
-        stacks.each(this::add);
+        stacks.applyEach(this::add);
     }
 
     public void add(ItemModule items){
@@ -287,7 +287,7 @@ public class ItemModule extends BlockModule{
     }
 
     public void remove(ItemSeq stacks){
-        stacks.each(this::remove);
+        stacks.applyEach(this::remove);
     }
 
     public void remove(Iterable<ItemStack> stacks){

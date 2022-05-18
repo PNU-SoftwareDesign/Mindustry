@@ -166,7 +166,7 @@ public class Sector{
 
     public void removeItems(ItemSeq items){
         ItemSeq copy = items.copy();
-        copy.each((i, a) -> copy.set(i, -a));
+        copy.applyEach((i, a) -> copy.set(i, -a));
         addItems(copy);
     }
 
@@ -182,10 +182,10 @@ public class Sector{
             if(state.rules.defaultTeam.core() != null){
                 ItemModule storage = state.rules.defaultTeam.items();
                 int cap = state.rules.defaultTeam.core().storageCapacity;
-                items.each((item, amount) -> storage.add(item, Math.min(cap - storage.get(item), amount)));
+                items.applyEach((item, amount) -> storage.add(item, Math.min(cap - storage.get(item), amount)));
             }
         }else if(hasBase()){
-            items.each((item, amount) -> info.items.add(item, Math.min(info.storageCapacity - info.items.get(item), amount)));
+            items.applyEach((item, amount) -> info.items.add(item, Math.min(info.storageCapacity - info.items.get(item), amount)));
             info.items.checkNegative();
             saveInfo();
         }

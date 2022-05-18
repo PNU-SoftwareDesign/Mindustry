@@ -34,7 +34,7 @@ public class ItemSeq implements Iterable<ItemStack>, JsonSerializable{
         return out;
     }
 
-    public void each(ItemConsumer cons){
+    public void applyEach(ItemConsumer cons){
         for(int i = 0; i < values.length; i++){
             if(values[i] != 0){
                 cons.accept(Vars.content.item(i), values[i]);
@@ -112,7 +112,7 @@ public class ItemSeq implements Iterable<ItemStack>, JsonSerializable{
     }
 
     public void add(ItemSeq seq){
-        seq.each(this::add);
+        seq.applyEach(this::add);
     }
 
     public void add(ItemStack stack){

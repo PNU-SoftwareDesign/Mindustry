@@ -51,8 +51,8 @@ public class LaunchLoadoutDialog extends BaseDialog{
             universe.updateLaunchResources(resources);
 
             total.clear();
-            selected.requirements().each(total::add);
-            universe.getLaunchResources().each(total::add);
+            selected.requirements().applyEach(total::add);
+            universe.getLaunchResources().applyEach(total::add);
             valid = sitems.has(total);
         };
 
@@ -88,7 +88,7 @@ public class LaunchLoadoutDialog extends BaseDialog{
             Seq<ItemStack> out = stacks.toSeq();
 
             ItemSeq realItems = sitems.copy();
-            selected.requirements().each(realItems::remove);
+            selected.requirements().applyEach(realItems::remove);
 
             loadout.show(selected.findCore().itemCapacity, realItems, out, UnlockableContent::unlocked, out::clear, () -> {}, () -> {
                 universe.updateLaunchResources(new ItemSeq(out));
