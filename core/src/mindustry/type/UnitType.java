@@ -700,8 +700,8 @@ public class UnitType extends UnlockableContent{
     }
 
     public void drawShadow(Unit unit){
-        float e = Math.max(unit.elevation, visualElevation) * (1f - unit.drownTime);
-        float x = unit.x + shadowTX * e, y = unit.y + shadowTY * e;
+        float elevation = Math.max(unit.elevation, visualElevation) * (1f - unit.drownTime);
+        float x = unit.x + shadowTX * elevation, y = unit.y + shadowTY * elevation;
         Floor floor = world.floorWorld(x, y);
 
         float dest = floor.canShadow ? 1f : 0f;
@@ -709,7 +709,7 @@ public class UnitType extends UnlockableContent{
         unit.shadowAlpha = unit.shadowAlpha < 0f ? dest : Mathf.approachDelta(unit.shadowAlpha, dest, 0.11f);
         Draw.color(Pal.shadow, Pal.shadow.a * unit.shadowAlpha);
 
-        Draw.rect(shadowRegion, unit.x + shadowTX * e, unit.y + shadowTY * e, unit.rotation - 90f);
+        Draw.rect(shadowRegion, unit.x + shadowTX * elevation, unit.y + shadowTY * elevation, unit.rotation - 90f);
         Draw.color();
     }
 
@@ -853,12 +853,12 @@ public class UnitType extends UnlockableContent{
 
         Leg[] legs = unit.legs();
 
-        float ssize = footRegion.width * Draw.scl * 1.5f;
+        float shadowSize = footRegion.width * Draw.scl * 1.5f;
         float rotation = unit.baseRotation();
         float invDrown = 1f - unit.drownTime;
 
         for(Leg leg : legs){
-            Drawf.shadow(leg.base.x, leg.base.y, ssize, invDrown);
+            Drawf.shadow(leg.base.x, leg.base.y, shadowSize, invDrown);
         }
 
         //legs are drawn front first
@@ -912,11 +912,11 @@ public class UnitType extends UnlockableContent{
 
         Draw.reset();
 
-        float e = unit.elevation;
+        float elevation = unit.elevation;
 
-        float sin = Mathf.lerp(Mathf.sin(mech.walkExtend(true), 2f / Mathf.PI, 1f), 0f, e);
-        float extension = Mathf.lerp(mech.walkExtend(false), 0f, e);
-        float boostTrns = e * 2f;
+        float sin = Mathf.lerp(Mathf.sin(mech.walkExtend(true), 2f / Mathf.PI, 1f), 0f, elevation);
+        float extension = Mathf.lerp(mech.walkExtend(false), 0f, elevation);
+        float boostTrns = elevation * 2f;
 
         Floor floor = unit.isFlying() ? Blocks.air.asFloor() : unit.floorOn();
 
@@ -932,7 +932,7 @@ public class UnitType extends UnlockableContent{
             unit.y + Angles.trnsy(mech.baseRotation(), extension * i - boostTrns, -boostTrns*i),
             legRegion.width * i * Draw.scl,
             legRegion.height * Draw.scl - Math.max(-sin * i, 0f) * legRegion.height * 0.5f * Draw.scl,
-            mech.baseRotation() - 90f + 35f*i*e);
+            mech.baseRotation() - 90f + 35f*i*elevation);
         }
 
         Draw.mixcol(Color.white, unit.hitTime);
