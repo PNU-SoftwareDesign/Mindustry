@@ -57,9 +57,9 @@ public class Astar{
             }
             closed.set(next.x, next.y);
             for(Point2 point : Geometry.d4){
-                int newx = next.x + point.x, newy = next.y + point.y;
-                if(Structs.inBounds(newx, newy, tiles.width, tiles.height)){
-                    Tile child = tiles.getn(newx, newy);
+                int newX = next.x + point.x, newY = next.y + point.y;
+                if(Structs.inBounds(newX, newY, tiles.width, tiles.height)){
+                    Tile child = tiles.getn(newX, newY);
                     if(passable.get(child)){
                         float newCost = th.cost(next, child) + baseCost;
                         if(!closed.get(child.x, child.y)){
