@@ -52,7 +52,6 @@ public class ParticleWeather extends Weather{
 
     @Override
     public void drawOver(WeatherState state){
-
         float windX, windY;
         if(useWindVector){
             float speed = baseSpeed * state.intensity;
@@ -70,13 +69,13 @@ public class ParticleWeather extends Weather{
                 noise.setFilter(TextureFilter.linear);
             }
 
-            float sSpeed = 1f, sScl = 1f, sAlpha = 1f, offset = 0f;
+            float sumOfSpeed = 1f, sumOfScale = 1f, sumOfOpacity = 1f, offset = 0f;
             Color col = Tmp.c1.set(noiseColor);
             for(int i = 0; i < noiseLayers; i++){
-                drawNoise(noise, noiseColor, noiseScale * sScl, state.opacity * sAlpha * opacityMultiplier, sSpeed * (useWindVector ? 1f : baseSpeed), state.intensity, windX, windY, offset);
-                sSpeed *= noiseLayerSpeedM;
-                sAlpha *= noiseLayerAlphaM;
-                sScl *= noiseLayerSclM;
+                drawNoise(noise, noiseColor, noiseScale * sumOfScale, state.opacity * sumOfOpacity * opacityMultiplier, sumOfSpeed * (useWindVector ? 1f : baseSpeed), state.intensity, windX, windY, offset);
+                sumOfSpeed *= noiseLayerSpeedM;
+                sumOfOpacity *= noiseLayerAlphaM;
+                sumOfScale *= noiseLayerSclM;
                 offset += 0.29f;
                 col.mul(noiseLayerColorM);
             }
