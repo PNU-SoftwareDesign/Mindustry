@@ -44,7 +44,7 @@ public class ItemStack implements Comparable<ItemStack>{
         return copy;
     }
 
-    public static ItemStack[] build(Object... items){
+    public static ItemStack[] buildList(Object... items){
         var stacks = new ItemStack[items.length / 2];
         for(int i = 0; i < items.length; i += 2){
             stacks[i / 2] = new ItemStack((Item)items[i], ((Number)items[i + 1]).intValue());
@@ -52,7 +52,7 @@ public class ItemStack implements Comparable<ItemStack>{
         return stacks;
     }
 
-    public static Seq<ItemStack> list(Object... items){
+    public static Seq<ItemStack> buildSeq(Object... items){
         Seq<ItemStack> stacks = new Seq<>(items.length / 2);
         for(int i = 0; i < items.length; i += 2){
             stacks.add(new ItemStack((Item)items[i], ((Number)items[i + 1]).intValue()));

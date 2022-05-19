@@ -33,7 +33,7 @@ public class LiquidStack implements Comparable<LiquidStack>{
         return other != null && other.liquid == liquid && other.amount == amount;
     }
 
-    public static LiquidStack[] mult(LiquidStack[] stacks, float amount){
+    public static LiquidStack[] multiply(LiquidStack[] stacks, float amount){
         LiquidStack[] copy = new LiquidStack[stacks.length];
         for(int i = 0; i < copy.length; i++){
             copy[i] = new LiquidStack(stacks[i].liquid, Mathf.round(stacks[i].amount * amount));
@@ -41,7 +41,7 @@ public class LiquidStack implements Comparable<LiquidStack>{
         return copy;
     }
 
-    public static LiquidStack[] with(Object... items){
+    public static LiquidStack[] buildList(Object... items){
         LiquidStack[] stacks = new LiquidStack[items.length / 2];
         for(int i = 0; i < items.length; i += 2){
             stacks[i / 2] = new LiquidStack((Liquid)items[i], ((Number)items[i + 1]).intValue());
@@ -49,7 +49,7 @@ public class LiquidStack implements Comparable<LiquidStack>{
         return stacks;
     }
 
-    public static Seq<LiquidStack> list(Object... items){
+    public static Seq<LiquidStack> buildSeq(Object... items){
         Seq<LiquidStack> stacks = new Seq<>(items.length / 2);
         for(int i = 0; i < items.length; i += 2){
             stacks.add(new LiquidStack((Liquid)items[i], ((Number)items[i + 1]).intValue()));
