@@ -386,13 +386,13 @@ public class Weapon implements Cloneable{
         unit.apply(shootStatus, shootStatusDuration);
     }
 
-    protected Bullet bullet(Unit unit, float shootX, float shootY, float angle, float lifescl){
+    protected Bullet bullet(Unit unit, float shootX, float shootY, float angle, float lifeScale){
         float xr = Mathf.range(xRand);
 
         return bullet.create(unit, unit.team,
         shootX + Angles.trnsx(angle, 0, xr),
         shootY + Angles.trnsy(angle, 0, xr),
-        angle, (1f - velocityRnd) + Mathf.random(velocityRnd), lifescl);
+        angle, (1f - velocityRnd) + Mathf.random(velocityRnd), lifeScale);
     }
 
     public Weapon copy(){

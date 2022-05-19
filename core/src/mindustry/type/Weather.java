@@ -116,7 +116,7 @@ public class Weather extends UnlockableContent{
                               float density, float intensity, float opacity,
                               float windX, float windY,
                               float minAlpha, float maxAlpha,
-                              float sinSclMin, float sinSclMax, float sinMagMin, float sinMagMax,
+                              float sinScaleMin, float sinScaleMax, float sinMagMin, float sinMagMax,
                               boolean randomParticleRotation){
         rand.setSeed(0);
         Tmp.r1.setCentered(Core.camera.position.x, Core.camera.position.y, Core.graphics.getWidth() / renderer.minScale(), Core.graphics.getHeight() / renderer.minScale());
@@ -126,15 +126,15 @@ public class Weather extends UnlockableContent{
         Draw.color(color, opacity);
 
         for(int i = 0; i < total; i++){
-            float scl = rand.random(0.5f, 1f);
-            float scl2 = rand.random(0.5f, 1f);
+            float scale = rand.random(0.5f, 1f);
+            float scale2 = rand.random(0.5f, 1f);
             float size = rand.random(sizeMin, sizeMax);
-            float x = (rand.random(0f, world.unitWidth()) + Time.time * windX * scl2);
-            float y = (rand.random(0f, world.unitHeight()) + Time.time * windY * scl);
+            float x = (rand.random(0f, world.unitWidth()) + Time.time * windX * scale2);
+            float y = (rand.random(0f, world.unitHeight()) + Time.time * windY * scale);
             float alpha = rand.random(minAlpha, maxAlpha);
             float rotation = randomParticleRotation ? rand.random(0f, 360f) : 0f;
 
-            x += Mathf.sin(y, rand.random(sinSclMin, sinSclMax), rand.random(sinMagMin, sinMagMax));
+            x += Mathf.sin(y, rand.random(sinScaleMin, sinScaleMax), rand.random(sinMagMin, sinMagMax));
 
             x -= Tmp.r1.x;
             y -= Tmp.r1.y;
@@ -165,11 +165,11 @@ public class Weather extends UnlockableContent{
         Draw.color(color);
 
         for(int i = 0; i < total; i++){
-            float scl = rand.random(0.5f, 1f);
-            float scl2 = rand.random(0.5f, 1f);
+            float scale = rand.random(0.5f, 1f);
+            float scale2 = rand.random(0.5f, 1f);
             float size = rand.random(sizeMin, sizeMax);
-            float x = (rand.random(0f, world.unitWidth()) + Time.time * xSpeed * scl2);
-            float y = (rand.random(0f, world.unitHeight()) - Time.time * ySpeed * scl);
+            float x = (rand.random(0f, world.unitWidth()) + Time.time * xSpeed * scale2);
+            float y = (rand.random(0f, world.unitHeight()) - Time.time * ySpeed * scale);
             float tint = rand.random(1f) * alpha;
 
             x -= Tmp.r1.x;
@@ -181,7 +181,7 @@ public class Weather extends UnlockableContent{
 
             if(Tmp.r3.setCentered(x, y, size).overlaps(Tmp.r2)){
                 Draw.alpha(tint);
-                Lines.lineAngle(x, y, Angles.angle(xSpeed * scl2, - ySpeed * scl), size/2f);
+                Lines.lineAngle(x, y, Angles.angle(xSpeed * scale2, -ySpeed * scale), size / 2f);
             }
         }
     }
@@ -233,32 +233,32 @@ public class Weather extends UnlockableContent{
         }
     }
 
-    public static void drawNoiseLayers(Texture noise, Color color, float noiseScl, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY,
-                                       int layers, float layerSpeedM , float layerAlphaM, float layerSclM, float layerColorM){
-        float sSpeed = 1f, sScl = 1f, sAlpha = 1f, offset = 0f;
+    public static void drawNoiseLayers(Texture noise, Color color, float noiseScale, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY,
+                                       int layers, float layerSpeedM, float layerAlphaM, float layerScaleM, float layerColorM){
+        float sumOfSpeed = 1f, sumOfScale = 1f, sumOfAlpha = 1f, offset = 0f;
         Color col = Tmp.c1.set(color);
         for(int i = 0; i < layers; i++){
-            drawNoise(noise, col, noiseScl * sScl, sAlpha * opacity, sSpeed * baseSpeed, intensity, vWindX, vWindY, offset);
-            sSpeed *= layerSpeedM;
-            sAlpha *= layerAlphaM;
-            sScl *= layerSclM;
+            drawNoise(noise, col, noiseScale * sumOfScale, sumOfAlpha * opacity, sumOfSpeed * baseSpeed, intensity, vWindX, vWindY, offset);
+            sumOfSpeed *= layerSpeedM;
+            sumOfAlpha *= layerAlphaM;
+            sumOfScale *= layerScaleM;
             offset += 0.29f;
             col.mul(layerColorM);
         }
     }
 
-    public static void drawNoise(Texture noise, Color color, float noiseScl, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY, float offset){
+    public static void drawNoise(Texture noise, Color color, float noiseScale, float opacity, float baseSpeed, float intensity, float vWindX, float vWindY, float offset){
         Draw.alpha(opacity);
         Draw.tint(color);
 
         float speed = baseSpeed * intensity;
         float windX = vWindX * speed, windY = vWindY * speed;
 
-        float scale = 1f / noiseScl;
+        float scale = 1f / noiseScale;
         float scroll = Time.time * scale + offset;
         Tmp.tr1.texture = noise;
         Core.camera.bounds(Tmp.r1);
-        Tmp.tr1.set(Tmp.r1.x*scale, Tmp.r1.y*scale, (Tmp.r1.x + Tmp.r1.width)*scale, (Tmp.r1.y + Tmp.r1.height)*scale);
+        Tmp.tr1.set(Tmp.r1.x * scale, Tmp.r1.y * scale, (Tmp.r1.x + Tmp.r1.width) * scale, (Tmp.r1.y + Tmp.r1.height) * scale);
         Tmp.tr1.scroll(-windX * scroll, -windY * scroll);
         Draw.rect(Tmp.tr1, Core.camera.position.x, Core.camera.position.y, Core.camera.width, -Core.camera.height);
     }
