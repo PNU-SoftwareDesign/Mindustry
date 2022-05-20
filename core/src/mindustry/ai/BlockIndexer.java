@@ -302,9 +302,8 @@ public class BlockIndexer{
         var items = breturnArray.items;
         int size = breturnArray.size;
         for(int i = 0; i < size; i++){
-            var b = items[i];
-            if(b.within(x, y, range + b.hitSize()/2f)){
-                cons.get(b);
+            if(items[i].within(x, y, range + items[i].hitSize()/2f)){
+                cons.get(items[i]);
             }
             items[i] = null;
         }
