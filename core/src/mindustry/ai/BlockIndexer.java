@@ -375,9 +375,9 @@ public class BlockIndexer{
             Tile closest = null;
             for(int qx = 0; qx < quadWidth; qx++){
                 for(int qy = 0; qy < quadHeight; qy++){
-                    var arr = ores[item.id][qx][qy];
-                    if(arr != null && arr.size > 0){
-                        Tile tile = world.tile(arr.first());
+                    var seq = ores[item.id][qx][qy];
+                    if(seq != null && seq.size > 0){
+                        Tile tile = world.tile(seq.first());
                         float dst = Mathf.dst2(xp, yp, tile.worldx(), tile.worldy());
                         if(closest == null || dst < minDst){
                             closest = tile;
