@@ -295,8 +295,9 @@ public class BlockIndexer{
         for(int i = 0; i < activeTeams.size; i++){
             Team team = activeTeams.items[i];
             var buildings = team.data().buildings;
-            if(buildings == null) continue;
-            buildings.intersect(x - range, y - range, range*2f, range*2f, breturnArray);
+            if(buildings != null){
+                buildings.intersect(x - range, y - range, range * 2f, range * 2f, breturnArray);
+            }
         }
 
         var items = breturnArray.items;
