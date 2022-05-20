@@ -264,12 +264,12 @@ public class Pathfinder implements Runnable{
             int dx = tile.x + point.x, dy = tile.y + point.y;
 
             Tile other = world.tile(dx, dy);
-            if(other == null) continue;
-
-            if(values[dx][dy] < value && (current == null || values[dx][dy] < tl) && path.passable(dx, dy) &&
-            !(point.x != 0 && point.y != 0 && (!path.passable(tile.x + point.x, tile.y) || !path.passable(tile.x, tile.y + point.y)))){ //diagonal corner trap
-                current = other;
-                tl = values[dx][dy];
+            if(other != null){
+                if(values[dx][dy] < value && (current == null || values[dx][dy] < tl) && path.passable(dx, dy) &&
+                !(point.x != 0 && point.y != 0 && (!path.passable(tile.x + point.x, tile.y) || !path.passable(tile.x, tile.y + point.y)))){ //diagonal corner trap
+                    current = other;
+                    tl = values[dx][dy];
+                }
             }
         }
 
