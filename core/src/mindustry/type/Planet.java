@@ -43,7 +43,7 @@ public class Planet extends UnlockableContent{
     /** Whether to draw the orbital circle. */
     public boolean drawOrbit = true;
     /** Atmosphere radius adjustment parameters. */
-    public float atmosphereRadIn = 0, atmosphereRadOut = 0.3f;
+    public float atmosphereRadIn = 0f, atmosphereRadOut = 0.3f;
     /** Frustrum sphere clip radius. */
     public float clipRadius = -1f;
     /** Orbital radius around the sun. Do not change unless you know exactly what you are doing.*/
@@ -96,7 +96,7 @@ public class Planet extends UnlockableContent{
 
         this.radius = radius;
         this.parent = parent;
-        this.orbitOffset = Mathf.randomSeed(id, 360);
+        this.orbitOffset = Mathf.randomSeed(id, 360f);
 
         //total radius is initially just the radius
         totalRadius = radius;
@@ -187,7 +187,7 @@ public class Planet extends UnlockableContent{
             return -getOrbitAngle() + 90;
         }
         //random offset for more variability
-        float offset = Mathf.randomSeed(id+1, 360);
+        float offset = Mathf.randomSeed(id+1, 360f);
         return (offset + universe.secondsf() / (rotateTime / 360f)) % 360f;
     }
 
@@ -199,7 +199,7 @@ public class Planet extends UnlockableContent{
         }
 
         float angle = getOrbitAngle();
-        return in.add(Angles.trnsx(angle, orbitRadius), 0, Angles.trnsy(angle, orbitRadius));
+        return in.add(Angles.trnsx(angle, orbitRadius), 0f, Angles.trnsy(angle, orbitRadius));
     }
 
     /** Gets the absolute world position of this planet, taking into account all parents. O(n) complexity.*/

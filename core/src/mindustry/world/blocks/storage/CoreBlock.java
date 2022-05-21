@@ -154,7 +154,7 @@ public class CoreBlock extends StorageBlock{
             //right before placing, create a "destination" item array which is all the previous items minus core requirements
             ItemModule items = tile.build.items.copy();
             if(!state.rules.infiniteResources){
-                items.remove(ItemStack.mult(requirements, state.rules.buildCostMultiplier));
+                items.remove(ItemStack.multiply(requirements, state.rules.buildCostMultiplier));
             }
 
             nextItems = items;
