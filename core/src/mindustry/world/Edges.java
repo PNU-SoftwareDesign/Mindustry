@@ -57,11 +57,11 @@ public class Edges{
         return getFacingEdge(tile.block, tile.x, tile.y, other);
     }
 
-    public static Tile getFacingEdge(Block block, int tilex, int tiley, Tile other){
-        if(!block.isMultiblock()) return world.tile(tilex, tiley);
+    public static Tile getFacingEdge(Block block, int tileX, int tileY, Tile other){
+        if(!block.isMultiblock()) return world.tile(tileX, tileY);
         int size = block.size;
-        return world.tile(tilex + Mathf.clamp(other.x - tilex, -(size - 1) / 2, (size / 2)),
-         tiley + Mathf.clamp(other.y - tiley, -(size - 1) / 2, (size / 2)));
+        return world.tile(tileX + Mathf.clamp(other.x - tileX, -(size - 1) / 2, (size / 2)),
+         tileY + Mathf.clamp(other.y - tileY, -(size - 1) / 2, (size / 2)));
     }
 
     public static Vec2[] getPixelPolygon(float radius){

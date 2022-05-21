@@ -92,7 +92,7 @@ public class Pathfinder implements Runnable{
             preloadPath(getField(state.rules.waveTeam, costGround, fieldCore));
 
             //preload water on naval maps
-            if(spawner.getSpawns().contains(t -> t.floor().isLiquid)){
+            if(spawner.getSpawns().contains(t -> t.getFloor().isLiquid)){
                 preloadPath(getField(state.rules.waveTeam, costNaval, fieldCore));
             }
 
@@ -110,12 +110,12 @@ public class Pathfinder implements Runnable{
 
     /** Packs a tile into its internal representation. */
     private int packTile(Tile tile){
-        boolean nearLiquid = false, nearSolid = false, nearGround = false, solid = tile.solid(), allDeep = tile.floor().isDeep();
+        boolean nearLiquid = false, nearSolid = false, nearGround = false, solid = tile.solid(), allDeep = tile.getFloor().isDeep();
 
         for(int i = 0; i < 4; i++){
             Tile other = tile.nearby(i);
             if(other != null){
-                Floor floor = other.floor();
+                Floor floor = other.getFloor();
                 if(floor.isLiquid) nearLiquid = true;
                 if(other.solid()) nearSolid = true;
                 if(!floor.isLiquid) nearGround = true;
@@ -126,16 +126,16 @@ public class Pathfinder implements Runnable{
         int tid = tile.getTeamID();
 
         return PathTile.get(
-            tile.build == null || !solid || tile.block() instanceof CoreBlock ? 0 : Math.min((int)(tile.build.health / 40), 80),
+            tile.build == null || !solid || tile.getBlock() instanceof CoreBlock ? 0 : Math.min((int)(tile.build.health / 40), 80),
             tid == 0 && tile.build != null && state.rules.coreCapture ? 255 : tid, //use teamid = 255 when core capture is enabled to mark out derelict structures
             solid,
-            tile.floor().isLiquid,
-            tile.staticDarkness() >= 2 || (tile.floor().solid && tile.block() == Blocks.air),
+            tile.getFloor().isLiquid,
+            tile.staticDarkness() >= 2 || (tile.getFloor().solid && tile.getBlock() == Blocks.air),
             nearLiquid,
             nearGround,
             nearSolid,
-            tile.floor().isDeep(),
-            tile.floor().damageTaken > 0.00001f,
+            tile.getFloor().isDeep(),
+            tile.getFloor().damageTaken > 0.00001f,
             allDeep
         );
     }

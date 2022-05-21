@@ -216,10 +216,10 @@ public class Weather extends UnlockableContent{
                 Tile tile = world.tileWorld(x, y);
 
                 //only create splashes on specific liquid.
-                if(tile != null && tile.floor().liquidDrop == splasher){
-                    Draw.color(Tmp.c1.set(tile.floor().mapColor).mul(1.5f).a(opacity));
+                if(tile != null && tile.getFloor().liquidDrop == splasher){
+                    Draw.color(Tmp.c1.set(tile.getFloor().mapColor).mul(1.5f).a(opacity));
                     Draw.rect(splashes[(int)(life * (splashes.length - 1))], x, y);
-                }else if(tile != null && tile.floor().liquidDrop == null && !tile.floor().solid){
+                }else if(tile != null && tile.getFloor().liquidDrop == null && !tile.getFloor().solid){
                     Draw.color(color);
                     Draw.alpha(Mathf.slope(life) * opacity);
 

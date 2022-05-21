@@ -43,7 +43,7 @@ public class BlendFilter extends GenerateFilter{
                 if(x*x + y*y > rad*rad) continue;
                 Tile tile = in.tile(in.x + x, in.y + y);
 
-                if(tile.floor() == block || tile.block() == block || tile.overlay() == block){
+                if(tile.getFloor() == block || tile.getBlock() == block || tile.getOverlay() == block){
                     found = true;
                     break outer;
                 }

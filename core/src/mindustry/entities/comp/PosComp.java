@@ -42,12 +42,12 @@ abstract class PosComp implements Position{
     /** Returns air if this unit is on a non-air top block. */
     Floor floorOn(){
         Tile tile = tileOn();
-        return tile == null || tile.block() != Blocks.air ? (Floor)Blocks.air : tile.floor();
+        return tile == null || tile.getBlock() != Blocks.air ? (Floor)Blocks.air : tile.getFloor();
     }
 
     Block blockOn(){
         Tile tile = tileOn();
-        return tile == null ? Blocks.air : tile.block();
+        return tile == null ? Blocks.air : tile.getBlock();
     }
 
     boolean onSolid(){

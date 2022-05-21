@@ -28,11 +28,11 @@ public class DirectionalItemBuffer{
 
     public Item poll(int buffer, float speed){
         if(indexes[buffer] > 0){
-            long l = buffers[buffer][0];
-            float time = BufferItem.time(l);
+            long direction = buffers[buffer][0];
+            float time = BufferItem.time(direction);
 
             if(Time.time >= time + speed || Time.time < time){
-                return content.item(BufferItem.item(l));
+                return content.item(BufferItem.item(direction));
             }
         }
         return null;
@@ -47,8 +47,8 @@ public class DirectionalItemBuffer{
         for(int i = 0; i < 4; i++){
             write.b(indexes[i]);
             write.b(buffers[i].length);
-            for(long l : buffers[i]){
-                write.l(l);
+            for(long direction : buffers[i]){
+                write.l(direction);
             }
         }
     }

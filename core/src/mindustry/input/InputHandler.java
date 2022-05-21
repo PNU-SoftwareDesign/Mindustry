@@ -609,7 +609,7 @@ public abstract class InputHandler implements InputProcessor, GestureListener{
     public void drawBreaking(int x, int y){
         Tile tile = world.tile(x, y);
         if(tile == null) return;
-        Block block = tile.block();
+        Block block = tile.getBlock();
 
         drawSelected(x, y, block, Pal.remove);
     }
@@ -735,10 +735,10 @@ public abstract class InputHandler implements InputProcessor, GestureListener{
 
             if(!req.breaking){
                 r1.setSize(req.block.size * tilesize);
-                r1.setCenter(other.worldx() + req.block.offset, other.worldy() + req.block.offset);
+                r1.setCenter(other.getWorldX() + req.block.offset, other.getWorldY() + req.block.offset);
             }else{
-                r1.setSize(other.block().size * tilesize);
-                r1.setCenter(other.worldx() + other.block().offset, other.worldy() + other.block().offset);
+                r1.setSize(other.getBlock().size * tilesize);
+                r1.setCenter(other.getWorldX() + other.getBlock().offset, other.getWorldY() + other.getBlock().offset);
             }
 
             return r2.overlaps(r1);
@@ -1057,9 +1057,9 @@ public abstract class InputHandler implements InputProcessor, GestureListener{
         return !Core.scene.hasMouse()
             && tile.drop() != null
             && player.unit().validMine(tile)
-            && !((!Core.settings.getBool("doubletapmine") && tile.floor().playerUnmineable) && tile.overlay().itemDrop == null)
+            && !((!Core.settings.getBool("doubletapmine") && tile.getFloor().playerUnmineable) && tile.getOverlay().itemDrop == null)
             && player.unit().acceptsItem(tile.drop())
-            && tile.block() == Blocks.air;
+            && tile.getBlock() == Blocks.air;
     }
 
     /** Returns the tile at the specified MOUSE coordinates. */

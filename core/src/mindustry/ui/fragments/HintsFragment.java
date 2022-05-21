@@ -70,7 +70,7 @@ public class HintsFragment extends Fragment{
 
         Events.on(BlockBuildEndEvent.class, event -> {
             if(!event.breaking && event.unit == player.unit()){
-                placedBlocks.add(event.tile.block());
+                placedBlocks.add(event.tile.getBlock());
             }
 
             if(event.breaking){

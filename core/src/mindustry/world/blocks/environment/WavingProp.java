@@ -16,7 +16,7 @@ public class WavingProp extends Prop{
         var region = variants > 0 ? variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))] : this.region;
 
         float
-        x = tile.worldx(), y = tile.worldy(),
+        x = tile.getWorldX(), y = tile.getWorldY(),
         rotmag = 3f, rotscl = 0.5f,
         rot = Mathf.randomSeedRange(tile.pos(), 20f) - 45 + Mathf.sin(Time.time + x, 50f * rotscl, 0.5f * rotmag) + Mathf.sin(Time.time - y, 65f * rotscl, 0.9f* rotmag) + Mathf.sin(Time.time + y - x, 85f * rotscl, 0.9f* rotmag),
         w = region.width * Draw.scl, h = region.height * Draw.scl,

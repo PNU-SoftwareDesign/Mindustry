@@ -55,7 +55,7 @@ public class ConstructBlock extends Block{
     @Remote(called = Loc.server)
     public static void deconstructFinish(Tile tile, Block block, Unit builder){
         Team team = tile.team();
-        block.breakEffect.at(tile.drawx(), tile.drawy(), block.size, block.mapColor);
+        block.breakEffect.at(tile.getDrawX(), tile.getDrawY(), block.size, block.mapColor);
         Events.fire(new BlockBuildEndEvent(tile, builder, team, true, null));
         tile.remove();
         if(shouldPlay()) block.breakSound.at(tile, block.breakPitchChange ? calcPitch(false) : 1f);
@@ -96,7 +96,7 @@ public class ConstructBlock extends Block{
             tile.build.playerPlaced(config);
         }
 
-        Fx.placeBlock.at(tile.drawx(), tile.drawy(), block.size);
+        Fx.placeBlock.at(tile.getDrawX(), tile.getDrawY(), block.size);
         if(shouldPlay()) block.placeSound.at(tile, block.placePitchChange ? calcPitch(true) : 1f);
 
         Events.fire(new BlockBuildEndEvent(tile, builder, team, false, config));
@@ -197,7 +197,7 @@ public class ConstructBlock extends Block{
         public void onDestroyed(){
             Fx.blockExplosionSmoke.at(tile);
 
-            if(!tile.floor().solid && tile.floor().hasSurface()){
+            if(!tile.getFloor().solid && tile.getFloor().hasSurface()){
                 Effect.rubble(x, y, size);
             }
         }

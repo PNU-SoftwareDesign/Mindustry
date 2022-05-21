@@ -64,7 +64,7 @@ abstract class PuddleComp implements Posc, Puddlec, Drawc{
             int targets = 0;
             for(Point2 point : Geometry.d4){
                 Tile other = world.tile(tile.x + point.x, tile.y + point.y);
-                if(other != null && other.block() == Blocks.air){
+                if(other != null && other.getBlock() == Blocks.air){
                     targets ++;
                     Puddles.deposit(other, tile, liquid, deposited, false);
                 }
@@ -109,7 +109,7 @@ abstract class PuddleComp implements Posc, Puddlec, Drawc{
         Draw.z(Layer.debris - 1);
 
         seeds = id;
-        boolean onLiquid = tile.floor().isLiquid;
+        boolean onLiquid = tile.getFloor().isLiquid;
         float f = Mathf.clamp(amount / (maxLiquid / 1.5f));
         float smag = onLiquid ? 0.8f : 0f;
         float sscl = 25f;
@@ -126,7 +126,7 @@ abstract class PuddleComp implements Posc, Puddlec, Drawc{
         if(liquid.lightColor.a > 0.001f && f > 0){
             Color color = liquid.lightColor;
             float opacity = color.a * f;
-            Drawf.light(Team.derelict, tile.drawx(), tile.drawy(),  30f * f, color, opacity * 0.8f);
+            Drawf.light(Team.derelict, tile.getDrawX(), tile.getDrawY(),  30f * f, color, opacity * 0.8f);
         }
     }
 

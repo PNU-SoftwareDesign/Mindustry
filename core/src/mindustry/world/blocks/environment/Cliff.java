@@ -22,13 +22,13 @@ public class Cliff extends Block{
 
     @Override
     public void drawBase(Tile tile){
-        Draw.color(Tmp.c1.set(tile.floor().mapColor).mul(1.6f));
-        Draw.rect(cliffs[tile.data & 0xff], tile.worldx(), tile.worldy());
+        Draw.color(Tmp.c1.set(tile.getFloor().mapColor).mul(1.6f));
+        Draw.rect(cliffs[tile.data & 0xff], tile.getWorldX(), tile.getWorldY());
         Draw.color();
     }
 
     @Override
     public int minimapColor(Tile tile){
-        return Tmp.c1.set(tile.floor().mapColor).mul(1.2f).rgba();
+        return Tmp.c1.set(tile.getFloor().mapColor).mul(1.2f).rgba();
     }
 }

@@ -138,7 +138,7 @@ public class DesktopInput extends InputHandler{
         if(mode == none && !isPlacing()){
             BuildPlan req = getRequest(cursorX, cursorY);
             if(req != null){
-                drawSelected(req.x, req.y, req.breaking ? req.tile().block() : req.block, Pal.accent);
+                drawSelected(req.x, req.y, req.breaking ? req.tile().getBlock() : req.block, Pal.accent);
             }
         }
 
@@ -335,7 +335,7 @@ public class DesktopInput extends InputHandler{
                 cursorType = ui.unloadCursor;
             }
 
-            if(cursor.build != null && cursor.interactable(player.team()) && !isPlacing() && Math.abs(Core.input.axisTap(Binding.rotate)) > 0 && Core.input.keyDown(Binding.rotateplaced) && cursor.block().rotate && cursor.block().quickRotate){
+            if(cursor.build != null && cursor.interactable(player.team()) && !isPlacing() && Math.abs(Core.input.axisTap(Binding.rotate)) > 0 && Core.input.keyDown(Binding.rotateplaced) && cursor.getBlock().rotate && cursor.getBlock().quickRotate){
                 Call.rotateBlock(player, cursor.build, Core.input.axisTap(Binding.rotate) > 0);
             }
         }

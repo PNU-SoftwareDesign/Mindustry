@@ -25,7 +25,7 @@ public class Fires{
             fire = Fire.create();
             fire.tile = tile;
             fire.lifetime = baseLifetime;
-            fire.set(tile.worldx(), tile.worldy());
+            fire.set(tile.getWorldX(), tile.getWorldY());
             fire.add();
             map.put(tile.pos(), fire);
         }else{

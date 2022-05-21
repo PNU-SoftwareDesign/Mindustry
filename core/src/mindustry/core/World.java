@@ -62,12 +62,12 @@ public class World{
 
     public boolean wallSolid(int x, int y){
         Tile tile = tile(x, y);
-        return tile == null || tile.block().solid;
+        return tile == null || tile.getBlock().solid;
     }
 
     public boolean wallSolidFull(int x, int y){
         Tile tile = tile(x, y);
-        return tile == null || (tile.block().solid && tile.block().fillsTile);
+        return tile == null || (tile.getBlock().solid && tile.getBlock().fillsTile);
     }
 
     public boolean isAccessible(int x, int y){
@@ -92,12 +92,12 @@ public class World{
 
     public Floor floor(int x, int y){
         Tile tile = tile(x, y);
-        return tile == null ? Blocks.air.asFloor() : tile.floor();
+        return tile == null ? Blocks.air.asFloor() : tile.getFloor();
     }
 
     public Floor floorWorld(float x, float y){
         Tile tile = tileWorld(x, y);
-        return tile == null ? Blocks.air.asFloor() : tile.floor();
+        return tile == null ? Blocks.air.asFloor() : tile.getFloor();
     }
 
     @Nullable
@@ -200,7 +200,7 @@ public class World{
 
         for(Tile tile : tiles){
             //remove legacy blocks; they need to stop existing
-            if(tile.block() instanceof LegacyBlock l){
+            if(tile.getBlock() instanceof LegacyBlock l){
                 l.removeSelf(tile);
                 continue;
             }
@@ -284,9 +284,9 @@ public class World{
                 continue;
             }
 
-            Liquid liquid = tile.floor().liquidDrop;
-            if(tile.floor().itemDrop != null) content.add(tile.floor().itemDrop);
-            if(tile.overlay().itemDrop != null) content.add(tile.overlay().itemDrop);
+            Liquid liquid = tile.getFloor().liquidDrop;
+            if(tile.getFloor().itemDrop != null) content.add(tile.getFloor().itemDrop);
+            if(tile.getOverlay().itemDrop != null) content.add(tile.getOverlay().itemDrop);
             if(liquid != null) content.add(liquid);
         }
 
@@ -415,7 +415,7 @@ public class World{
         byte darkIterations = darkRadius;
 
         for(int i = 0; i < dark.length; i++){
-            Tile tile = tiles.geti(i);
+            Tile tile = tiles.getIndex(i);
             if(tile.isDarkened()){
                 dark[i] = darkIterations;
             }
@@ -428,7 +428,7 @@ public class World{
                 for(Point2 point : Geometry.d4){
                     int newX = tile.x + point.x, newY = tile.y + point.y;
                     int nidx = newY * tiles.width + newX;
-                    if(tiles.in(newX, newY) && dark[nidx] < dark[idx]){
+                    if(tiles.isInBounds(newX, newY) && dark[nidx] < dark[idx]){
                         min = true;
                         break;
                     }
@@ -451,7 +451,7 @@ public class World{
                 for(Point2 p : Geometry.d4){
                     int px = p.x + tile.x, py = p.y + tile.y;
                     int nidx = py * tiles.width + px;
-                    if(tiles.in(px, py) && !(tile.isDarkened() && dark[nidx] == 4)){
+                    if(tiles.isInBounds(px, py) && !(tile.isDarkened() && dark[nidx] == 4)){
                         full = false;
                         break;
                     }
@@ -467,7 +467,7 @@ public class World{
             int minDst = darkRadius + 1;
             for(int cx = tile.x - darkRadius; cx <= tile.x + darkRadius; cx++){
                 for(int cy = tile.y - darkRadius; cy <= tile.y + darkRadius; cy++){
-                    if(tiles.in(cx, cy) && !rawTile(cx, cy).isDarkened()){
+                    if(tiles.isInBounds(cx, cy) && !rawTile(cx, cy).isDarkened()){
                         minDst = Math.min(minDst, Math.abs(cx - tile.x) + Math.abs(cy - tile.y));
                     }
                 }
@@ -515,7 +515,7 @@ public class World{
         }
 
         Tile tile = world.tile(x, y);
-        if(tile != null && tile.block().solid && tile.block().fillsTile && !tile.block().synthetic()){
+        if(tile != null && tile.getBlock().solid && tile.getBlock().fillsTile && !tile.getBlock().synthetic()){
             dark = Math.max(dark, tile.data);
         }
 
@@ -528,7 +528,7 @@ public class World{
 
         @Override
         public Tile tile(int index){
-            return tiles.geti(index);
+            return tiles.getIndex(index);
         }
 
         @Override
@@ -539,7 +539,7 @@ public class World{
         @Override
         public Tile create(int x, int y, int floorID, int overlayID, int wallID){
             Tile tile = new Tile(x, y, floorID, overlayID, wallID);
-            tiles.set(x, y, tile);
+            tiles.setPos(x, y, tile);
             return tile;
         }
 

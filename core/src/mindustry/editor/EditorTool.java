@@ -18,7 +18,7 @@ public enum EditorTool{
             if(!Structs.inBounds(x, y, editor.width(), editor.height())) return;
 
             Tile tile = editor.tile(x, y);
-            editor.drawBlock = tile.block() == Blocks.air || !tile.block().inEditor ? tile.overlay() == Blocks.air ? tile.floor() : tile.overlay() : tile.block();
+            editor.drawBlock = tile.getBlock() == Blocks.air || !tile.getBlock().inEditor ? tile.getOverlay() == Blocks.air ? tile.getFloor() : tile.getOverlay() : tile.getBlock();
         }
     },
     line(KeyCode.l, "replace", "orthogonal"){
@@ -109,7 +109,7 @@ public enum EditorTool{
             //mode 0 or 1, fill everything with the floor/tile or replace it
             if(mode == 0 || mode == -1){
                 //can't fill parts or multiblocks
-                if(tile.block().isMultiblock()){
+                if(tile.getBlock().isMultiblock()){
                     return;
                 }
 
@@ -117,19 +117,19 @@ public enum EditorTool{
                 Cons<Tile> setter;
 
                 if(editor.drawBlock.isOverlay()){
-                    Block dest = tile.overlay();
+                    Block dest = tile.getOverlay();
                     if(dest == editor.drawBlock) return;
-                    tester = t -> t.overlay() == dest && (t.floor().hasSurface() || !t.floor().needsSurface);
+                    tester = t -> t.getOverlay() == dest && (t.getFloor().hasSurface() || !t.getFloor().needsSurface);
                     setter = t -> t.setOverlay(editor.drawBlock);
                 }else if(editor.drawBlock.isFloor()){
-                    Block dest = tile.floor();
+                    Block dest = tile.getFloor();
                     if(dest == editor.drawBlock) return;
-                    tester = t -> t.floor() == dest;
+                    tester = t -> t.getFloor() == dest;
                     setter = t -> t.setFloorUnder(editor.drawBlock.asFloor());
                 }else{
-                    Block dest = tile.block();
+                    Block dest = tile.getBlock();
                     if(dest == editor.drawBlock) return;
-                    tester = t -> t.block() == dest;
+                    tester = t -> t.getBlock() == dest;
                     setter = t -> t.setBlock(editor.drawBlock, editor.drawTeam);
                 }
 
@@ -226,7 +226,7 @@ public enum EditorTool{
                     }
                 });
             }else if(mode == 0){ //replace-only mode, doesn't affect air
-                editor.drawBlocks(x, y, tile -> Mathf.chance(chance) && tile.block() != Blocks.air);
+                editor.drawBlocks(x, y, tile -> Mathf.chance(chance) && tile.getBlock() != Blocks.air);
             }else{
                 editor.drawBlocks(x, y, tile -> Mathf.chance(chance));
             }

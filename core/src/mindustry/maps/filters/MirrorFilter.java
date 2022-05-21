@@ -43,11 +43,11 @@ public class MirrorFilter extends GenerateFilter{
         if(!left(v1, v2, v3)){
             mirror(in.width, in.height, v3, v1.x, v1.y, v2.x, v2.y);
             Tile tile = in.tile(v3.x, v3.y);
-            in.floor = tile.floor();
-            if(!tile.block().synthetic()){
-                in.block = tile.block();
+            in.floor = tile.getFloor();
+            if(!tile.getBlock().synthetic()){
+                in.block = tile.getBlock();
             }
-            in.overlay = tile.overlay();
+            in.overlay = tile.getOverlay();
         }
     }
 

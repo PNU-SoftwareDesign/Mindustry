@@ -41,8 +41,8 @@ public class Pump extends LiquidBlock{
 
         for(Tile other : tile.getLinkedTilesAs(this, tempTiles)){
             if(canPump(other)){
-                liquidDrop = other.floor().liquidDrop;
-                amount += other.floor().liquidMultiplier;
+                liquidDrop = other.getFloor().liquidDrop;
+                amount += other.getFloor().liquidMultiplier;
             }
         }
 
@@ -66,9 +66,9 @@ public class Pump extends LiquidBlock{
         if(isMultiblock()){
             Liquid last = null;
             for(Tile other : tile.getLinkedTilesAs(this, tempTiles)){
-                if(other.floor().liquidDrop == null) continue;
-                if(other.floor().liquidDrop != last && last != null) return false;
-                last = other.floor().liquidDrop;
+                if(other.getFloor().liquidDrop == null) continue;
+                if(other.getFloor().liquidDrop != last && last != null) return false;
+                last = other.getFloor().liquidDrop;
             }
             return last != null;
         }else{
@@ -77,7 +77,7 @@ public class Pump extends LiquidBlock{
     }
 
     protected boolean canPump(Tile tile){
-        return tile != null && tile.floor().liquidDrop != null;
+        return tile != null && tile.getFloor().liquidDrop != null;
     }
 
     public class PumpBuild extends LiquidBuild{
@@ -105,8 +105,8 @@ public class Pump extends LiquidBlock{
 
             for(Tile other : tile.getLinkedTiles(tempTiles)){
                 if(canPump(other)){
-                    liquidDrop = other.floor().liquidDrop;
-                    amount += other.floor().liquidMultiplier;
+                    liquidDrop = other.getFloor().liquidDrop;
+                    amount += other.getFloor().liquidMultiplier;
                 }
             }
         }

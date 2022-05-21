@@ -233,10 +233,10 @@ public class MassDriver extends Block{
 
             Draw.color(Pal.accent);
             Lines.stroke(1f);
-            Drawf.circles(x, y, (tile.block().size / 2f + 1) * tilesize + sin - 2f, Pal.accent);
+            Drawf.circles(x, y, (tile.getBlock().size / 2f + 1) * tilesize + sin - 2f, Pal.accent);
 
             for(var shooter : waitingShooters){
-                Drawf.circles(shooter.x, shooter.y, (tile.block().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
+                Drawf.circles(shooter.x, shooter.y, (tile.getBlock().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
                 Drawf.arrow(shooter.x, shooter.y, x, y, size * tilesize + sin, 4f + sin, Pal.place);
             }
 
@@ -283,7 +283,7 @@ public class MassDriver extends Block{
             data.to = target;
             int totalUsed = 0;
             for(int i = 0; i < content.items().size; i++){
-                int maxTransfer = Math.min(items.get(content.item(i)), tile.block().itemCapacity - totalUsed);
+                int maxTransfer = Math.min(items.get(content.item(i)), tile.getBlock().itemCapacity - totalUsed);
                 data.items[i] = maxTransfer;
                 totalUsed += maxTransfer;
                 items.remove(content.item(i), maxTransfer);

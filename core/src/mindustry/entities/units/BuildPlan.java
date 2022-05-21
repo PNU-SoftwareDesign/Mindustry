@@ -54,7 +54,7 @@ public class BuildPlan implements Position{
         this.x = x;
         this.y = y;
         this.rotation = -1;
-        this.block = world.tile(x, y).block();
+        this.block = world.tile(x, y).getBlock();
         this.breaking = true;
     }
 
@@ -69,7 +69,7 @@ public class BuildPlan implements Position{
     public boolean isRotation(Team team){
         if(breaking) return false;
         Tile tile = tile();
-        return tile != null && tile.team() == team && tile.block() == block && tile.build != null && tile.build.rotation != rotation;
+        return tile != null && tile.team() == team && tile.getBlock() == block && tile.build != null && tile.build.rotation != rotation;
     }
 
     public boolean samePos(BuildPlan other){

@@ -24,7 +24,7 @@ public class CachedTile extends Tile{
     protected void changeBuild(Team team, Prov<Building> entityprov, int rotation){
         build = null;
 
-        Block block = block();
+        Block block = getBlock();
 
         if(block.hasBuilding()){
             Building n = entityprov.get();

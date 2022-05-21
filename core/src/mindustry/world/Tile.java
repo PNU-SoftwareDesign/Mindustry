@@ -136,35 +136,35 @@ public class Tile implements Position, QuadTreeObject, Displayable{
         return 0;
     }
 
-    public float worldx(){
+    public float getWorldX(){
         return x * tilesize;
     }
 
-    public float worldy(){
+    public float getWorldY(){
         return y * tilesize;
     }
 
-    public float drawx(){
-        return block().offset + worldx();
+    public float getDrawX(){
+        return getBlock().offset + getWorldX();
     }
 
-    public float drawy(){
-        return block().offset + worldy();
+    public float getDrawY(){
+        return getBlock().offset + getWorldY();
     }
 
     public boolean isDarkened(){
         return block.solid && !block.synthetic() && block.fillsTile;
     }
 
-    public Floor floor(){
+    public Floor getFloor(){
         return floor;
     }
 
-    public Block block(){
+    public Block getBlock(){
         return block;
     }
 
-    public Floor overlay(){
+    public Floor getOverlay(){
         return overlay;
     }
 
@@ -188,11 +188,11 @@ public class Tile implements Position, QuadTreeObject, Displayable{
         return build == null || build.tile() == this;
     }
 
-    public int centerX(){
+    public int getCenterX(){
         return build == null ? x : build.tile.x;
     }
 
-    public int centerY(){
+    public int getCenterY(){
         return build == null ? y : build.tile.y;
     }
 
@@ -232,10 +232,10 @@ public class Tile implements Position, QuadTreeObject, Displayable{
             for(int pass = 0; pass < 2; pass++){
                 for(int dx = 0; dx < block.size; dx++){
                     for(int dy = 0; dy < block.size; dy++){
-                        int worldx = dx + offsetx + x;
-                        int worldy = dy + offsety + y;
-                        if(!(worldx == x && worldy == y)){
-                            Tile other = world.tile(worldx, worldy);
+                        int worldX = dx + offsetx + x;
+                        int worldY = dy + offsety + y;
+                        if(!(worldX == x && worldY == y)){
+                            Tile other = world.tile(worldX, worldY);
 
                             if(other != null){
                                 if(pass == 0){
@@ -469,7 +469,7 @@ public class Tile implements Position, QuadTreeObject, Displayable{
     }
 
     public Rect getHitbox(Rect rect){
-        return rect.setCentered(drawx(), drawy(), block.size * tilesize, block.size * tilesize);
+        return rect.setCentered(getDrawX(), getDrawY(), block.size * tilesize, block.size * tilesize);
     }
 
     public Rect getBounds(Rect rect){
@@ -640,12 +640,12 @@ public class Tile implements Position, QuadTreeObject, Displayable{
 
     @Override
     public float getX(){
-        return drawx();
+        return getDrawX();
     }
 
     @Override
     public float getY(){
-        return drawy();
+        return getDrawY();
     }
 
     @Override

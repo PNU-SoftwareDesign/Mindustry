@@ -413,10 +413,10 @@ public class PayloadMassDriver extends PayloadBlock{
 
             Draw.color(Pal.accent);
             Lines.stroke(1f);
-            Drawf.circles(x, y, (tile.block().size / 2f + 1) * tilesize + sin - 2f, Pal.accent);
+            Drawf.circles(x, y, (tile.getBlock().size / 2f + 1) * tilesize + sin - 2f, Pal.accent);
 
             for(var shooter : waitingShooters){
-                Drawf.circles(shooter.x, shooter.y, (tile.block().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
+                Drawf.circles(shooter.x, shooter.y, (tile.getBlock().size / 2f + 1) * tilesize + sin - 2f, Pal.place);
                 Drawf.arrow(shooter.x, shooter.y, x, y, size * tilesize + sin, 4f + sin, Pal.place);
             }
 

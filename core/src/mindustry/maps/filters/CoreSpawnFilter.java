@@ -27,7 +27,7 @@ public class CoreSpawnFilter extends GenerateFilter{
     public void apply(Tiles tiles, GenerateInput in){
         IntSeq spawns = new IntSeq();
         for(Tile tile : tiles){
-            if(tile.team() == state.rules.defaultTeam && tile.block() instanceof CoreBlock && tile.isCenter()){
+            if(tile.team() == state.rules.defaultTeam && tile.getBlock() instanceof CoreBlock && tile.isCenter()){
                 spawns.add(tile.pos());
             }
         }
@@ -36,7 +36,7 @@ public class CoreSpawnFilter extends GenerateFilter{
 
         int used = Math.min(spawns.size, amount);
         for(int i = used; i < spawns.size; i++){
-            tiles.getp(spawns.get(i)).remove();
+            tiles.getPos(spawns.get(i)).remove();
         }
     }
 

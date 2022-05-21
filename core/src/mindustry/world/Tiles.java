@@ -35,12 +35,12 @@ public class Tiles implements Iterable<Tile>{
     }
 
     /** set a tile at a position; does not range-check. use with caution. */
-    public void set(int x, int y, Tile tile){
+    public void setPos(int x, int y, Tile tile){
         array[y*width + x] = tile;
     }
 
     /** @return whether these coordinates are in bounds */
-    public boolean in(int x, int y){
+    public boolean isInBounds(int x, int y){
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
@@ -64,12 +64,12 @@ public class Tiles implements Iterable<Tile>{
     }
 
     /** @return a tile at an iteration index [0, width * height] */
-    public Tile geti(int idx){
+    public Tile getIndex(int idx){
         return array[idx];
     }
 
     /** @return a tile at an int position (not equivalent to geti) */
-    public @Nullable Tile getp(int pos){
+    public @Nullable Tile getPos(int pos){
         return get(Point2.x(pos), Point2.y(pos));
     }
 

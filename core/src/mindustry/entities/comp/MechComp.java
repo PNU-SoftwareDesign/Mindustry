@@ -54,7 +54,7 @@ abstract class MechComp implements Posc, Flyingc, Hitboxc, Unitc, Mechc, Elevati
             if(type.mechStepParticles){
                 Tile tile = world.tileWorld(cx, cy);
                 if(tile != null){
-                    Color color = tile.floor().mapColor;
+                    Color color = tile.getFloor().mapColor;
                     Fx.unitLand.at(cx, cy, hitSize/8f, color);
                 }
             }

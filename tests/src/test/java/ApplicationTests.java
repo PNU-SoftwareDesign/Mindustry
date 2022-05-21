@@ -282,7 +282,7 @@ public class ApplicationTests{
         assertEquals(world.tile(bx, by).team(), Team.sharded);
         for(int x = bx - 1; x <= bx + 1; x++){
             for(int y = by - 1; y <= by + 1; y++){
-                assertEquals(world.tile(x, y).block(), Blocks.coreShard);
+                assertEquals(world.tile(x, y).getBlock(), Blocks.coreShard);
                 assertEquals(world.tile(x, y).build, world.tile(bx, by).build);
             }
         }
@@ -534,11 +534,11 @@ public class ApplicationTests{
 
         //edge block
         world.tile(1, 1).setBlock(Blocks.coreShard);
-        assertEquals(Blocks.coreShard, world.tile(0, 0).block());
+        assertEquals(Blocks.coreShard, world.tile(0, 0).getBlock());
 
         //this should overwrite the block
         world.tile(2, 2).setBlock(Blocks.coreShard);
-        assertEquals(Blocks.air, world.tile(0, 0).block());
+        assertEquals(Blocks.air, world.tile(0, 0).getBlock());
     }
 
     @Test
@@ -706,9 +706,9 @@ public class ApplicationTests{
         d1.update();
         d2.update();
 
-        assertEquals(Blocks.copperWallLarge, world.tile(0, 0).block());
-        assertEquals(Blocks.air, world.tile(2, 2).block());
-        assertEquals(Blocks.copperWallLarge, world.tile(1, 1).block());
+        assertEquals(Blocks.copperWallLarge, world.tile(0, 0).getBlock());
+        assertEquals(Blocks.air, world.tile(2, 2).getBlock());
+        assertEquals(Blocks.copperWallLarge, world.tile(1, 1).getBlock());
         assertEquals(world.tile(1, 1).build, world.tile(0, 0).build);
     }
 
@@ -730,7 +730,7 @@ public class ApplicationTests{
         Time.setDeltaProvider(() -> 1f);
         d2.update();
 
-        assertEquals(content.getByName(ContentType.block, "build2"), world.tile(0, 0).block());
+        assertEquals(content.getByName(ContentType.block, "build2"), world.tile(0, 0).getBlock());
 
         Time.setDeltaProvider(() -> 9999f);
 
@@ -739,8 +739,8 @@ public class ApplicationTests{
 
         d1.update();
 
-        assertEquals(Blocks.copperWallLarge, world.tile(0, 0).block());
-        assertEquals(Blocks.copperWallLarge, world.tile(1, 1).block());
+        assertEquals(Blocks.copperWallLarge, world.tile(0, 0).getBlock());
+        assertEquals(Blocks.copperWallLarge, world.tile(1, 1).getBlock());
 
         d2.clearBuilding();
         d2.addBuild(new BuildPlan(1, 1));
@@ -749,9 +749,9 @@ public class ApplicationTests{
             d2.update();
         }
 
-        assertEquals(Blocks.air, world.tile(0, 0).block());
-        assertEquals(Blocks.air, world.tile(2, 2).block());
-        assertEquals(Blocks.air, world.tile(1, 1).block());
+        assertEquals(Blocks.air, world.tile(0, 0).getBlock());
+        assertEquals(Blocks.air, world.tile(2, 2).getBlock());
+        assertEquals(Blocks.air, world.tile(1, 1).getBlock());
     }
 
     @Test
@@ -761,7 +761,7 @@ public class ApplicationTests{
         world.beginMapLoad();
         for(int x = 0; x < tiles.width; x++){
             for(int y = 0; y < tiles.height; y++){
-                tiles.set(x, y, new Tile(x, y, Blocks.stone, Blocks.air, Blocks.air));
+                tiles.setPos(x, y, new Tile(x, y, Blocks.stone, Blocks.air, Blocks.air));
             }
         }
         int i = 0;
@@ -783,10 +783,10 @@ public class ApplicationTests{
                     try{
                         tile.build.update();
                     }catch(Throwable t){
-                        fail("Failed to update block '" + tile.block() + "'.", t);
+                        fail("Failed to update block '" + tile.getBlock() + "'.", t);
                     }
-                    assertEquals(tile.block(), tile.build.block);
-                    assertEquals(tile.block().health, tile.build.health());
+                    assertEquals(tile.getBlock(), tile.build.block);
+                    assertEquals(tile.getBlock().health, tile.build.health());
                 }
             }
         }
@@ -796,14 +796,14 @@ public class ApplicationTests{
         for(int x = 0; x < world.tiles.width; x++){
             for(int y = 0; y < world.tiles.height; y++){
                 Tile tile = world.rawTile(x, y);
-                if(tile.build != null && tile.isCenter() && !(tile.block() instanceof CoreBlock)){
+                if(tile.build != null && tile.isCenter() && !(tile.getBlock() instanceof CoreBlock)){
                     try{
                         tile.build.update();
                     }catch(Throwable t){
                         fail("Failed to update block in payload: '" + ((BuildPayload)tile.build.getPayload()).block() + "'", t);
                     }
-                    assertEquals(tile.block(), tile.build.block);
-                    assertEquals(tile.block().health, tile.build.health());
+                    assertEquals(tile.getBlock(), tile.build.block);
+                    assertEquals(tile.getBlock().health, tile.build.health());
                 }
             }
         }
@@ -817,7 +817,7 @@ public class ApplicationTests{
         world.beginMapLoad();
         for(int x = 0; x < tiles.width; x++){
             for(int y = 0; y < tiles.height; y++){
-                tiles.set(x, y, new Tile(x, y, Blocks.stone, Blocks.air, Blocks.air));
+                tiles.setPos(x, y, new Tile(x, y, Blocks.stone, Blocks.air, Blocks.air));
             }
         }
 
@@ -869,7 +869,7 @@ public class ApplicationTests{
                     if(tile.drop() != null){
                         resources.add(tile.drop());
                     }
-                    if(tile.block() instanceof CoreBlock && tile.team() == state.rules.defaultTeam){
+                    if(tile.getBlock() instanceof CoreBlock && tile.team() == state.rules.defaultTeam){
                         hasSpawnPoint = true;
                     }
                 }
@@ -936,7 +936,7 @@ public class ApplicationTests{
         Unit unit = UnitTypes.mono.create(Team.sharded);
         Tile tile = new Tile(0, 0, Blocks.air, Blocks.air, block);
         tile.setTeam(Team.sharded);
-        int capacity = tile.block().itemCapacity;
+        int capacity = tile.getBlock().itemCapacity;
 
         assertNotNull(tile.build, "Tile should have an entity, but does not: " + tile);
 

@@ -301,9 +301,9 @@ public class Block extends UnlockableContent{
             tile.build.draw();
         }else{
             if(variants == 0){
-                Draw.rect(region, tile.drawx(), tile.drawy());
+                Draw.rect(region, tile.getDrawX(), tile.getDrawY());
             }else{
-                Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.drawx(), tile.drawy());
+                Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.getDrawX(), tile.getDrawY());
             }
         }
     }
@@ -312,11 +312,11 @@ public class Block extends UnlockableContent{
         Tile tile = world.tile(x, y);
         if(tile == null) return 0;
         return tile.getLinkedTilesAs(this, tempTiles)
-            .sumf(other -> !other.floor().isLiquid ? 1f : 0f) / size / size;
+            .sumf(other -> !other.getFloor().isLiquid ? 1f : 0f) / size / size;
     }
 
     public void drawEnvironmentLight(Tile tile){
-        Drawf.light(tile.worldx(), tile.worldy(), lightRadius, lightColor, lightColor.a);
+        Drawf.light(tile.getWorldX(), tile.getWorldY(), lightRadius, lightColor, lightColor.a);
     }
 
     /** Drawn when you are placing a block. */
@@ -375,7 +375,7 @@ public class Block extends UnlockableContent{
         Tile tile = world.tile(x, y);
         if(tile == null) return 0;
         return tile.getLinkedTilesAs(this, tempTiles)
-            .sumf(other -> !floating && other.floor().isDeep() ? 0 : other.floor().attributes.get(attr));
+            .sumf(other -> !floating && other.getFloor().isDeep() ? 0 : other.getFloor().attributes.get(attr));
     }
 
     public TextureRegion getDisplayIcon(Tile tile){

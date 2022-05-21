@@ -110,7 +110,7 @@ public class WaveSpawner{
             for(Tile spawn : spawns){
                 if(filterPos != -1 && filterPos != spawn.pos()) continue;
 
-                cons.accept(spawn.worldx(), spawn.worldy(), true);
+                cons.accept(spawn.getWorldX(), spawn.getWorldY(), true);
             }
         }
 
@@ -192,7 +192,7 @@ public class WaveSpawner{
         spawns.clear();
 
         for(Tile tile : world.tiles){
-            if(tile.overlay() == Blocks.spawn){
+            if(tile.getOverlay() == Blocks.spawn){
                 spawns.add(tile);
             }
         }

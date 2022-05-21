@@ -21,14 +21,14 @@ public class TreeBlock extends Block{
     public void drawBase(Tile tile){
 
         float
-        x = tile.worldx(), y = tile.worldy(),
+        x = tile.getWorldX(), y = tile.getWorldY(),
         rot = Mathf.randomSeed(tile.pos(), 0, 4) * 90 + Mathf.sin(Time.time + x, 50f, 0.5f) + Mathf.sin(Time.time - y, 65f, 0.9f) + Mathf.sin(Time.time + y - x, 85f, 0.9f),
         w = region.width * Draw.scl, h = region.height * Draw.scl,
         scl = 30f, mag = 0.2f;
 
         if(shadow.found()){
             Draw.z(Layer.power - 1);
-            Draw.rect(shadow, tile.worldx() + shadowOffset, tile.worldy() + shadowOffset, rot);
+            Draw.rect(shadow, tile.getWorldX() + shadowOffset, tile.getWorldY() + shadowOffset, rot);
         }
 
         Draw.z(Layer.power + 1);

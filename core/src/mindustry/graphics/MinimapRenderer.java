@@ -172,8 +172,8 @@ public class MinimapRenderer{
 
     private int colorFor(Tile tile){
         if(tile == null) return 0;
-        int bc = tile.block().minimapColor(tile);
-        Color color = Tmp.c1.set(bc == 0 ? MapIO.colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team()) : bc);
+        int bc = tile.getBlock().minimapColor(tile);
+        Color color = Tmp.c1.set(bc == 0 ? MapIO.colorFor(tile.getBlock(), tile.getFloor(), tile.getOverlay(), tile.team()) : bc);
         color.mul(1f - Mathf.clamp(world.getDarkness(tile.x, tile.y) / 4f));
 
         return color.rgba();

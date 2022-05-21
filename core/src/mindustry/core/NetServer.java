@@ -683,9 +683,9 @@ public class NetServer implements ApplicationListener{
                     Tile tile = world.tile(req.x, req.y);
                     if(tile == null || (!req.breaking && req.block == null)) continue;
                     //auto-skip done requests
-                    if(req.breaking && tile.block() == Blocks.air){
+                    if(req.breaking && tile.getBlock() == Blocks.air){
                         continue;
-                    }else if(!req.breaking && tile.block() == req.block && (!req.block.rotate || (tile.build != null && tile.build.rotation == req.rotation))){
+                    }else if(!req.breaking && tile.getBlock() == req.block && (!req.block.rotate || (tile.build != null && tile.build.rotation == req.rotation))){
                         continue;
                     }else if(con.rejectedRequests.contains(r -> r.breaking == req.breaking && r.x == req.x && r.y == req.y)){ //check if request was recently rejected, and skip it if so
                         continue;

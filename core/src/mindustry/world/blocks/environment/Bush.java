@@ -32,7 +32,7 @@ public class Bush extends Prop{
             var region = Angles.angleDist(ba, 225f) <= botAngle ? botRegion : this.region;
 
             Draw.rect(region,
-                tile.worldx() - Angles.trnsx(angle, origin) + w*0.5f, tile.worldy() - Angles.trnsy(angle, origin),
+                tile.getWorldX() - Angles.trnsx(angle, origin) + w*0.5f, tile.getWorldY() - Angles.trnsy(angle, origin),
                 w, h,
                 origin*4f, h/2f,
                 angle
@@ -40,7 +40,7 @@ public class Bush extends Prop{
         }
 
         if(centerRegion.found()){
-            Draw.rect(centerRegion, tile.worldx(), tile.worldy());
+            Draw.rect(centerRegion, tile.getWorldX(), tile.getWorldY());
         }
     }
 }

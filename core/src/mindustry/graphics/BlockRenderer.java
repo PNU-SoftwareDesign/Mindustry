@@ -69,7 +69,7 @@ public class BlockRenderer{
             Draw.color(blendShadowColor);
 
             for(Tile tile : world.tiles){
-                if(tile.block().hasShadow){
+                if(tile.getBlock().hasShadow){
                     Fill.rect(tile.x + 0.5f, tile.y + 0.5f, 1, 1);
                 }
             }
@@ -142,12 +142,12 @@ public class BlockRenderer{
     }
 
     boolean indexBlock(Tile tile){
-        var block = tile.block();
+        var block = tile.getBlock();
         return tile.isCenter() && block != Blocks.air && block.cacheLayer == CacheLayer.normal;
     }
 
     boolean indexFloor(Tile tile){
-        return tile.block() == Blocks.air && tile.floor().emitLight && world.getDarkness(tile.x, tile.y) < 3;
+        return tile.getBlock() == Blocks.air && tile.getFloor().emitLight && world.getDarkness(tile.x, tile.y) < 3;
     }
 
     void recordIndex(Tile tile){
@@ -170,7 +170,7 @@ public class BlockRenderer{
     public void checkChanges(){
         darkEvents.each(pos -> {
             var tile = world.tile(pos);
-            if(tile != null && tile.block().fillsTile){
+            if(tile != null && tile.getBlock().fillsTile){
                 tile.data = world.getWallDarkness(tile);
             }
         });
@@ -236,7 +236,7 @@ public class BlockRenderer{
 
             for(Tile tile : shadowEvents){
                 //draw white/shadow color depending on blend
-                Draw.color(!tile.block().hasShadow ? Color.white : blendShadowColor);
+                Draw.color(!tile.getBlock().hasShadow ? Color.white : blendShadowColor);
                 Fill.rect(tile.x + 0.5f, tile.y + 0.5f, 1, 1);
             }
 
@@ -291,7 +291,7 @@ public class BlockRenderer{
             }
 
             //lights are drawn even in the expanded range
-            if(((tile.build != null && procLights.add(tile.build.pos())) || tile.block().emitLight)){
+            if(((tile.build != null && procLights.add(tile.build.pos())) || tile.getBlock().emitLight)){
                 lightview.add(tile);
             }
 
@@ -317,8 +317,8 @@ public class BlockRenderer{
 
         Draw.color(Color.green);
         for(var tile : tree.objects){
-            var block = tile.block();
-            Tmp.r1.setCentered(tile.worldx() + block.offset, tile.worldy() + block.offset, block.clipSize, block.clipSize);
+            var block = tile.getBlock();
+            Tmp.r1.setCentered(tile.getWorldX() + block.offset, tile.getWorldY() + block.offset, block.clipSize, block.clipSize);
             Lines.rect(Tmp.r1);
         }
 
@@ -338,7 +338,7 @@ public class BlockRenderer{
         //draw most tile stuff
         for(int i = 0; i < tileview.size; i++){
             Tile tile = tileview.items[i];
-            Block block = tile.block();
+            Block block = tile.getBlock();
             Building entity = tile.build;
 
             Draw.z(Layer.block);
@@ -375,10 +375,10 @@ public class BlockRenderer{
 
                 if(entity != null){
                     entity.drawLight();
-                }else if(tile.block().emitLight){
-                    tile.block().drawEnvironmentLight(tile);
-                }else if(tile.floor().emitLight && tile.block() == Blocks.air){ //only draw floor light under non-solid blocks
-                    tile.floor().drawEnvironmentLight(tile);
+                }else if(tile.getBlock().emitLight){
+                    tile.getBlock().drawEnvironmentLight(tile);
+                }else if(tile.getFloor().emitLight && tile.getBlock() == Blocks.air){ //only draw floor light under non-solid blocks
+                    tile.getFloor().drawEnvironmentLight(tile);
                 }
             }
         }
@@ -392,8 +392,8 @@ public class BlockRenderer{
 
         @Override
         public void hitbox(Tile tile){
-            var block = tile.block();
-            tmp.setCentered(tile.worldx() + block.offset, tile.worldy() + block.offset, block.clipSize, block.clipSize);
+            var block = tile.getBlock();
+            tmp.setCentered(tile.getWorldX() + block.offset, tile.getWorldY() + block.offset, block.clipSize, block.clipSize);
         }
 
         @Override
@@ -410,8 +410,8 @@ public class BlockRenderer{
 
         @Override
         public void hitbox(Tile tile){
-            var floor = tile.floor();
-            tmp.setCentered(tile.worldx(), tile.worldy(), floor.clipSize, floor.clipSize);
+            var floor = tile.getFloor();
+            tmp.setCentered(tile.getWorldX(), tile.getWorldY(), floor.clipSize, floor.clipSize);
         }
 
         @Override

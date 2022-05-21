@@ -123,15 +123,15 @@ public class GameService{
             if(campaign() && e.unit != null && e.unit.isLocal() && !e.breaking){
                 SStat.blocksBuilt.add();
 
-                if(e.tile.block() == Blocks.router && e.tile.build.proximity().contains(t -> t.block == Blocks.router)){
+                if(e.tile.getBlock() == Blocks.router && e.tile.build.proximity().contains(t -> t.block == Blocks.router)){
                     chainRouters.complete();
                 }
 
-                if(e.tile.block() == Blocks.groundFactory){
+                if(e.tile.getBlock() == Blocks.groundFactory){
                     buildGroundFactory.complete();
                 }
 
-                if(blocksBuilt.add(e.tile.block().name)){
+                if(blocksBuilt.add(e.tile.getBlock().name)){
                     if(blocksBuilt.contains("meltdown") && blocksBuilt.contains("spectre") && blocksBuilt.contains("foreshadow")){
                         buildMeltdownSpectre.complete();
                     }
@@ -139,7 +139,7 @@ public class GameService{
                     save();
                 }
 
-                if(!circleConveyor.isAchieved() && e.tile.block() instanceof Conveyor){
+                if(!circleConveyor.isAchieved() && e.tile.getBlock() instanceof Conveyor){
                     checked.clear();
                     check: {
                         Tile current = e.tile;
@@ -147,7 +147,7 @@ public class GameService{
                             checked.add(current.pos());
                             if(current.build == null) break check;
                             Tile next = current.nearby(current.build.rotation);
-                            if(next != null && next.block() instanceof Conveyor){
+                            if(next != null && next.getBlock() instanceof Conveyor){
                                 current = next;
                             }else{
                                 break check;

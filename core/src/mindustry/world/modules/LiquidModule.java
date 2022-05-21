@@ -144,9 +144,8 @@ public class LiquidModule extends BlockModule{
 
         for(int j = 0; j < count; j++){
             Liquid liq = content.liquid(legacy ? read.ub() : read.s());
-            int liquidid = liq.id;
             float amount = read.f();
-            liquids[liquidid] = amount;
+            liquids[liq.id] = amount;
             if(amount > 0){
                 current = liq;
             }

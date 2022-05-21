@@ -148,7 +148,7 @@ public class MenuRenderer implements Disposable{
                 }
 
                 Tile tile;
-                tiles.set(x, y, (tile = new CachedTile()));
+                tiles.setPos(x, y, (tile = new CachedTile()));
                 tile.x = (short)x;
                 tile.y = (short)y;
                 tile.setFloor(floor.asFloor());
@@ -168,7 +168,7 @@ public class MenuRenderer implements Disposable{
         Draw.color(Color.black);
 
         for(Tile tile : world.tiles){
-            if(tile.block() != Blocks.air){
+            if(tile.getBlock() != Blocks.air){
                 Fill.rect(tile.x + 0.5f, tile.y + 0.5f, 1, 1);
             }
         }
@@ -182,18 +182,18 @@ public class MenuRenderer implements Disposable{
         batch.beginCache();
 
         for(Tile tile : world.tiles){
-            tile.floor().drawBase(tile);
+            tile.getFloor().drawBase(tile);
         }
 
         for(Tile tile : world.tiles){
-            tile.overlay().drawBase(tile);
+            tile.getOverlay().drawBase(tile);
         }
 
         cacheFloor = batch.endCache();
         batch.beginCache();
 
         for(Tile tile : world.tiles){
-            tile.block().drawBase(tile);
+            tile.getBlock().drawBase(tile);
         }
 
         cacheWall = batch.endCache();

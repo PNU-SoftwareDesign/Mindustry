@@ -64,7 +64,7 @@ abstract class BuilderComp implements Posc, Statusc, Teamc, Rotc{
         while(it.hasNext()){
             BuildPlan req = it.next();
             Tile tile = world.tile(req.x, req.y);
-            if(tile == null || (req.breaking && tile.block() == Blocks.air) || (!req.breaking && ((tile.build != null && tile.build.rotation == req.rotation) || !req.block.rotate) && tile.block() == req.block)){
+            if(tile == null || (req.breaking && tile.getBlock() == Blocks.air) || (!req.breaking && ((tile.build != null && tile.build.rotation == req.rotation) || !req.block.rotate) && tile.getBlock() == req.block)){
                 it.remove();
             }
         }
@@ -90,7 +90,7 @@ abstract class BuilderComp implements Posc, Statusc, Teamc, Rotc{
 
         lastActive = current;
         buildAlpha = 1f;
-        if(current.breaking) lastSize = tile.block().size;
+        if(current.breaking) lastSize = tile.getBlock().size;
 
         if(!within(tile, finalPlaceDst)) return;
 
@@ -266,14 +266,14 @@ abstract class BuilderComp implements Posc, Statusc, Teamc, Rotc{
         }
 
         //draw remote plans.
-        if(core != null && active && !isLocal() && !(tile.block() instanceof ConstructBlock)){
+        if(core != null && active && !isLocal() && !(tile.getBlock() instanceof ConstructBlock)){
             Draw.z(Layer.plans - 1f);
             drawPlan(plan, 0.5f);
             drawPlanTop(plan, 0.5f);
             Draw.z(Layer.flyingUnit);
         }
 
-        int size = plan.breaking ? active ? tile.block().size : lastSize : plan.block.size;
+        int size = plan.breaking ? active ? tile.getBlock().size : lastSize : plan.block.size;
         float tx = plan.drawx(), ty = plan.drawy();
 
         Lines.stroke(1f, plan.breaking ? Pal.remove : Pal.accent);

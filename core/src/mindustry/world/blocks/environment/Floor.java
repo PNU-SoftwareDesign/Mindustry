@@ -150,11 +150,11 @@ public class Floor extends Block{
     public void drawBase(Tile tile){
         Mathf.rand.setSeed(tile.pos());
 
-        Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.worldx(), tile.worldy());
+        Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.getWorldX(), tile.getWorldY());
 
         drawEdges(tile);
 
-        Floor floor = tile.overlay();
+        Floor floor = tile.getOverlay();
         if(floor != Blocks.air && floor != this){ //ore should never have itself on top, but it's possible, so prevent a crash in that case
             floor.drawBase(tile);
         }
@@ -183,9 +183,9 @@ public class Floor extends Block{
         for(int i = 0; i < 8; i++){
             Point2 point = Geometry.d8[i];
             Tile other = tile.nearby(point);
-            if(other != null && other.floor().cacheLayer == layer && other.floor().edges() != null){
-                if(!blended.getAndSet(other.floor().id)){
-                    blenders.add(other.floor());
+            if(other != null && other.getFloor().cacheLayer == layer && other.getFloor().edges() != null){
+                if(!blended.getAndSet(other.getFloor().id)){
+                    blenders.add(other.getFloor());
                 }
             }
         }
@@ -200,9 +200,9 @@ public class Floor extends Block{
         for(int i = 0; i < 8; i++){
             Point2 point = Geometry.d8[i];
             Tile other = tile.nearby(point);
-            if(other != null && doEdge(other.floor()) && other.floor().cacheLayer == cacheLayer && other.floor().edges() != null){
-                if(!blended.getAndSet(other.floor().id)){
-                    blenders.add(other.floor());
+            if(other != null && doEdge(other.getFloor()) && other.getFloor().cacheLayer == cacheLayer && other.getFloor().edges() != null){
+                if(!blended.getAndSet(other.getFloor().id)){
+                    blenders.add(other.getFloor());
                 }
             }
         }
@@ -217,9 +217,9 @@ public class Floor extends Block{
             for(int i = 0; i < 8; i++){
                 Point2 point = Geometry.d8[i];
                 Tile other = tile.nearby(point);
-                if(other != null && other.floor() == block){
+                if(other != null && other.getFloor() == block){
                     TextureRegion region = edge((Floor)block, 1 - point.x, 1 - point.y);
-                    Draw.rect(region, tile.worldx(), tile.worldy());
+                    Draw.rect(region, tile.getWorldX(), tile.getWorldY());
                 }
             }
         }
@@ -229,10 +229,10 @@ public class Floor extends Block{
     protected void drawEdgesFlat(Tile tile, boolean sameLayer){
         for(int i = 0; i < 4; i++){
             Tile other = tile.nearby(i);
-            if(other != null && doEdge(other.floor())){
-                Color color = other.floor().mapColor;
+            if(other != null && doEdge(other.getFloor())){
+                Color color = other.getFloor().mapColor;
                 Draw.color(color.r, color.g, color.b, 1f);
-                Draw.rect(edgeRegion, tile.worldx(), tile.worldy(), i*90);
+                Draw.rect(edgeRegion, tile.getWorldX(), tile.getWorldY(), i*90);
             }
         }
         Draw.color();

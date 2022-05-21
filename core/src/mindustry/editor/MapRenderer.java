@@ -97,8 +97,8 @@ public class MapRenderer implements Disposable{
         Tile tile = editor.tiles().getn(wx, wy);
 
         Team team = tile.team();
-        Block floor = tile.floor();
-        Block wall = tile.block();
+        Block floor = tile.getFloor();
+        Block wall = tile.getBlock();
 
         TextureRegion region;
 
@@ -140,8 +140,8 @@ public class MapRenderer implements Disposable{
 
             offsetX = tilesize / 2f - region.width / 2f * Draw.scl;
             offsetY = tilesize / 2f - region.height / 2f * Draw.scl;
-        }else if(wall == Blocks.air && !tile.overlay().isAir()){
-            region = tile.overlay().editorVariantRegions()[Mathf.randomSeed(idxWall, 0, tile.overlay().editorVariantRegions().length - 1)];
+        }else if(wall == Blocks.air && !tile.getOverlay().isAir()){
+            region = tile.getOverlay().editorVariantRegions()[Mathf.randomSeed(idxWall, 0, tile.getOverlay().editorVariantRegions().length - 1)];
         }else{
             region = clearEditor;
         }

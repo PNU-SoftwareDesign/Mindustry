@@ -176,7 +176,7 @@ abstract class PayloadComp implements Posc, Rotc, Hitboxc, Unitc{
             }
 
             Fx.unitDrop.at(tile);
-            Fx.placeBlock.at(on.drawx(), on.drawy(), on.block().size);
+            Fx.placeBlock.at(on.getDrawX(), on.getDrawY(), on.getBlock().size);
             return true;
         }
 

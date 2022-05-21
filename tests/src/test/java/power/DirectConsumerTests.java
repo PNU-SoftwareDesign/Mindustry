@@ -36,7 +36,7 @@ public class DirectConsumerTests extends PowerTestFixture{
             consumes.power(requestedPower);
             consumes.items(new ItemStack(Items.silicon, 30), new ItemStack(Items.lead, 30));
         }});
-        ct.block().init();
+        ct.getBlock().init();
         ct.build.items.add(Items.silicon, siliconAmount);
         ct.build.items.add(Items.lead, leadAmount);
 

@@ -209,11 +209,11 @@ public class Maps{
                     for(int y = 0; y < map.height; y++){
                         Tile tile = world.rawTile(x, y);
 
-                        if(tile.block() instanceof CoreBlock){
+                        if(tile.getBlock() instanceof CoreBlock){
                             map.teams.add(tile.getTeamID());
                         }
 
-                        if(tile.overlay() == Blocks.spawn){
+                        if(tile.getOverlay() == Blocks.spawn){
                             map.spawns ++;
                         }
                     }

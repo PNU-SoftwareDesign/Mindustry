@@ -121,7 +121,7 @@ public class Placement{
         }
 
         Boolf<BuildPlan> placeable = plan -> (plan.placeable(player.team())) ||
-            (plan.tile() != null && plan.tile().block() == plan.block); //don't count the same block as inaccessible
+            (plan.tile() != null && plan.tile().getBlock() == plan.block); //don't count the same block as inaccessible
 
         var result = plans1.clear();
         var team = player.team();
@@ -184,7 +184,7 @@ public class Placement{
         }
 
         Boolf<BuildPlan> placeable = plan -> (plan.placeable(player.team())) ||
-        (plan.tile() != null && plan.tile().block() == plan.block); //don't count the same block as inaccessible
+        (plan.tile() != null && plan.tile().getBlock() == plan.block); //don't count the same block as inaccessible
 
         var result = plans1.clear();
         var team = player.team();
@@ -235,7 +235,7 @@ public class Placement{
     private static float tileHeuristic(Tile tile, Tile other){
         Block block = control.input.block;
 
-        if((!other.block().alwaysReplace && !(block != null && block.canReplace(other.block()))) || other.floor().isDeep()){
+        if((!other.getBlock().alwaysReplace && !(block != null && block.canReplace(other.getBlock()))) || other.getFloor().isDeep()){
             return 20;
         }else{
             if(parents.containsKey(tile.pos())){
@@ -254,10 +254,10 @@ public class Placement{
 
     private static boolean validNode(Tile tile, Tile other){
         Block block = control.input.block;
-        if(block != null && block.canReplace(other.block())){
+        if(block != null && block.canReplace(other.getBlock())){
             return true;
         }else{
-            return other.block().alwaysReplace;
+            return other.getBlock().alwaysReplace;
         }
     }
 

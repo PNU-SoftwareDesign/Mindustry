@@ -39,8 +39,8 @@ public class OreMedianFilter extends GenerateFilter{
         int cx = (in.x / 2) * 2;
         int cy = (in.y / 2) * 2;
         if(in.overlay != Blocks.air){
-            if(!(in.tile(cx + 1, cy).overlay() == in.overlay && in.tile(cx, cy).overlay() == in.overlay && in.tile(cx + 1, cy + 1).overlay() == in.overlay && in.tile(cx, cy + 1).overlay() == in.overlay &&
-            !in.tile(cx + 1, cy).block().isStatic() && !in.tile(cx, cy).block().isStatic() && !in.tile(cx + 1, cy + 1).block().isStatic() && !in.tile(cx, cy + 1).block().isStatic())){
+            if(!(in.tile(cx + 1, cy).getOverlay() == in.overlay && in.tile(cx, cy).getOverlay() == in.overlay && in.tile(cx + 1, cy + 1).getOverlay() == in.overlay && in.tile(cx, cy + 1).getOverlay() == in.overlay &&
+            !in.tile(cx + 1, cy).getBlock().isStatic() && !in.tile(cx, cy).getBlock().isStatic() && !in.tile(cx + 1, cy + 1).getBlock().isStatic() && !in.tile(cx, cy + 1).getBlock().isStatic())){
                 in.overlay = Blocks.air;
             }
         }
@@ -53,8 +53,8 @@ public class OreMedianFilter extends GenerateFilter{
                 if(Mathf.dst2(x, y) > rad*rad) continue;
 
                 Tile tile = in.tile(in.x + x, in.y + y);
-                if(tile.overlay() != Blocks.spawn)
-                blocks.add(tile.overlay().id);
+                if(tile.getOverlay() != Blocks.spawn)
+                blocks.add(tile.getOverlay().id);
             }
         }
 

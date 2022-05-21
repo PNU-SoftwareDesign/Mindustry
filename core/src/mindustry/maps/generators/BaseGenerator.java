@@ -69,11 +69,11 @@ public class BaseGenerator{
         for(int i = 0; i < passes; i++){
             //random schematics
             pass(tile -> {
-                if(!tile.block().alwaysReplace) return;
+                if(!tile.getBlock().alwaysReplace) return;
 
-                if(((tile.overlay().asFloor().itemDrop != null || (tile.drop() != null && Mathf.chance(nonResourceChance)))
-                || (tile.floor().liquidDrop != null && Mathf.chance(nonResourceChance * 2))) && Mathf.chance(resourceChance)){
-                    Seq<BasePart> parts = bases.forResource(tile.drop() != null ? tile.drop() : tile.floor().liquidDrop);
+                if(((tile.getOverlay().asFloor().itemDrop != null || (tile.drop() != null && Mathf.chance(nonResourceChance)))
+                || (tile.getFloor().liquidDrop != null && Mathf.chance(nonResourceChance * 2))) && Mathf.chance(resourceChance)){
+                    Seq<BasePart> parts = bases.forResource(tile.drop() != null ? tile.drop() : tile.getFloor().liquidDrop);
                     if(!parts.isEmpty()){
                         tryPlace(parts.getFrac(difficulty + Mathf.range(bracketRange)), tile.x, tile.y, team);
                     }
@@ -86,8 +86,8 @@ public class BaseGenerator{
         //replace walls with the correct type (disabled)
         if(false)
         pass(tile -> {
-            if(tile.block() instanceof Wall && tile.team() == team && tile.block() != wall && tile.block() != wallLarge){
-                tile.setBlock(tile.block().size == 2 ? wallLarge : wall, team);
+            if(tile.getBlock() instanceof Wall && tile.team() == team && tile.getBlock() != wall && tile.getBlock() != wallLarge){
+                tile.setBlock(tile.getBlock().size == 2 ? wallLarge : wall, team);
             }
         });
 
@@ -96,14 +96,14 @@ public class BaseGenerator{
             //small walls
             pass(tile -> {
 
-                if(tile.block().alwaysReplace){
+                if(tile.getBlock().alwaysReplace){
                     boolean any = false;
 
                     for(Point2 p : Geometry.d4){
                         Tile o = tiles.get(tile.x + p.x, tile.y + p.y);
 
                         //do not block payloads
-                        if(o != null && (o.block() instanceof PayloadConveyor || o.block() instanceof PayloadBlock)){
+                        if(o != null && (o.getBlock() instanceof PayloadConveyor || o.getBlock() instanceof PayloadBlock)){
                             return;
                         }
                     }
@@ -114,7 +114,7 @@ public class BaseGenerator{
                         }
 
                         Tile o = tiles.get(tile.x + p.x, tile.y + p.y);
-                        if(o != null && o.team() == team && !(o.block() instanceof Wall)){
+                        if(o != null && o.team() == team && !(o.getBlock() instanceof Wall)){
                             any = true;
                             break;
                         }
@@ -132,9 +132,9 @@ public class BaseGenerator{
                 for(int cx = 0; cx < 2; cx++){
                     for(int cy = 0; cy < 2; cy++){
                         Tile tile = tiles.get(curr.x + cx, curr.y + cy);
-                        if(tile == null || tile.block().size != 1 || (tile.block() != wall && !tile.block().alwaysReplace)) return;
+                        if(tile == null || tile.getBlock().size != 1 || (tile.getBlock() != wall && !tile.getBlock().alwaysReplace)) return;
 
-                        if(tile.block() == wall){
+                        if(tile.getBlock() == wall){
                             walls ++;
                         }
                     }
@@ -148,7 +148,7 @@ public class BaseGenerator{
 
         //clear path for ground units
         for(Tile tile : cores){
-            Astar.pathfind(tile, spawn, t -> t.team() == state.rules.waveTeam && !t.within(tile, 25f * 8) ? 100000 : t.floor().hasSurface() ? 1 : 10, t -> !t.block().isStatic()).each(t -> {
+            Astar.pathfind(tile, spawn, t -> t.team() == state.rules.waveTeam && !t.within(tile, 25f * 8) ? 100000 : t.getFloor().hasSurface() ? 1 : 10, t -> !t.getBlock().isStatic()).each(t -> {
                 if(!t.within(tile, 25f * 8)){
                     if(t.team() == state.rules.waveTeam){
                         t.setBlock(Blocks.air);
@@ -169,7 +169,7 @@ public class BaseGenerator{
         if(tiles == null) return;
 
         for(Tile tile : tiles){
-            if(tile.isCenter() && tile.block() instanceof PowerNode && tile.team() == state.rules.waveTeam){
+            if(tile.isCenter() && tile.getBlock() instanceof PowerNode && tile.team() == state.rules.waveTeam){
                 tile.build.placed();
             }
         }
@@ -220,12 +220,12 @@ public class BaseGenerator{
 
                     tile.block.iterateTaken(tile.x + cx, tile.y + cy, (ex, ey) -> {
 
-                        if(world.tiles.getn(ex, ey).floor().hasSurface()){
+                        if(world.tiles.getn(ex, ey).getFloor().hasSurface()){
                             set(world.tiles.getn(ex, ey), item);
                         }
 
                         Tile rand = world.tiles.getc(ex + Mathf.range(1), ey + Mathf.range(1));
-                        if(rand.floor().hasSurface()){
+                        if(rand.getFloor().hasSurface()){
                             //random ores nearby to make it look more natural
                             set(rand, item);
                         }
@@ -280,6 +280,6 @@ public class BaseGenerator{
     static boolean overlaps(int x, int y){
         Tile tile = world.tiles.get(x, y);
 
-        return tile == null || !tile.block().alwaysReplace || world.getDarkness(x, y) > 0;
+        return tile == null || !tile.getBlock().alwaysReplace || world.getDarkness(x, y) > 0;
     }
 }

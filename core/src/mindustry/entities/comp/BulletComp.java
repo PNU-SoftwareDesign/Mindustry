@@ -144,8 +144,8 @@ abstract class BulletComp implements Timedc, Damagec, Hitboxc, Teamc, Posc, Draw
             if(type.collideFloor || type.collideTerrain){
                 Tile tile = world.tile(x, y);
                 if(
-                    type.collideFloor && (tile == null || tile.floor().hasSurface() || tile.block() != Blocks.air) ||
-                    type.collideTerrain && tile != null && tile.block() instanceof StaticWall
+                    type.collideFloor && (tile == null || tile.getFloor().hasSurface() || tile.getBlock() != Blocks.air) ||
+                    type.collideTerrain && tile != null && tile.getBlock() instanceof StaticWall
                 ){
                     type.despawned(self());
                     remove();

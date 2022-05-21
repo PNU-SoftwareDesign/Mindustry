@@ -81,7 +81,7 @@ public class MapIO{
                 public void setBlock(Block type){
                     super.setBlock(type);
 
-                    int c = colorFor(block(), Blocks.air, Blocks.air, team());
+                    int c = colorFor(getBlock(), Blocks.air, Blocks.air, team());
                     if(c != black){
                         walls.setRaw(x, floors.height - 1 - y, c);
                         floors.set(x, floors.height - 1 - y + 1, shade);
@@ -105,7 +105,7 @@ public class MapIO{
                     //read team colors
                     if(tile.build != null){
                         int c = tile.build.team.color.rgba8888();
-                        int size = tile.block().size;
+                        int size = tile.getBlock().size;
                         int offsetx = -(size - 1) / 2;
                         int offsety = -(size - 1) / 2;
                         for(int dx = 0; dx < size; dx++){
@@ -155,7 +155,7 @@ public class MapIO{
         for(int x = 0; x < pixmap.width; x++){
             for(int y = 0; y < pixmap.height; y++){
                 Tile tile = tiles.getn(x, y);
-                pixmap.set(x, pixmap.height - 1 - y, colorFor(tile.block(), tile.floor(), tile.overlay(), tile.team()));
+                pixmap.set(x, pixmap.height - 1 - y, colorFor(tile.getBlock(), tile.getFloor(), tile.getOverlay(), tile.team()));
             }
         }
         return pixmap;
@@ -173,7 +173,7 @@ public class MapIO{
         for(Tile tile : tiles){
             //while synthetic blocks are possible, most of their data is lost, so in order to avoid questions like
             //"why is there air under my drill" and "why are all my conveyors facing right", they are disabled
-            int color = tile.block().hasColor && !tile.block().synthetic() ? tile.block().mapColor.rgba() : tile.floor().mapColor.rgba();
+            int color = tile.getBlock().hasColor && !tile.getBlock().synthetic() ? tile.getBlock().mapColor.rgba() : tile.getFloor().mapColor.rgba();
             pix.set(tile.x, tiles.height - 1 - tile.y, color);
         }
         return pix;
@@ -182,7 +182,7 @@ public class MapIO{
     public static void readImage(Pixmap pixmap, Tiles tiles){
         for(Tile tile : tiles){
             int color = pixmap.get(tile.x, pixmap.height - 1 - tile.y);
-            Block block = ColorMapper.get(color);
+            Block block = ColorMapper.getBlock(color);
 
             if(block.isFloor()){
                 tile.setFloor(block.asFloor());
@@ -195,18 +195,18 @@ public class MapIO{
 
         //guess at floors by grabbing a random adjacent floor
         for(Tile tile : tiles){
-            if(tile.floor() == Blocks.air && tile.block() != Blocks.air){
+            if(tile.getFloor() == Blocks.air && tile.getBlock() != Blocks.air){
                 for(Point2 p : Geometry.d4){
                     Tile other = tiles.get(tile.x + p.x, tile.y + p.y);
-                    if(other != null && other.floor() != Blocks.air){
-                        tile.setFloorUnder(other.floor());
+                    if(other != null && other.getFloor() != Blocks.air){
+                        tile.setFloorUnder(other.getFloor());
                         break;
                     }
                 }
             }
 
             //default to stone floor
-            if(tile.floor() == Blocks.air){
+            if(tile.getFloor() == Blocks.air){
                 tile.setFloorUnder((Floor)Blocks.stone);
             }
         }

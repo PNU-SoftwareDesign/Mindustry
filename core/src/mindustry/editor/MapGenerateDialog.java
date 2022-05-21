@@ -159,7 +159,7 @@ public class MapGenerateDialog extends BaseDialog{
             for(int x = 0; x < editor.width(); x++){
                 for(int y = 0; y < editor.height(); y++){
                     Tile tile = editor.tile(x, y);
-                    input.set(x, y, tile.block(), tile.floor(), tile.overlay());
+                    input.set(x, y, tile.getBlock(), tile.getFloor(), tile.getOverlay());
                     filter.apply(input);
                     writeTiles[x + y*world.width()] = PackTile.get(input.block.id, input.floor.id, input.overlay.id);
                 }
@@ -168,7 +168,7 @@ public class MapGenerateDialog extends BaseDialog{
             editor.load(() -> {
                 //read from buffer back into tiles
                 for(int i = 0; i < editor.width() * editor.height(); i++){
-                    Tile tile = world.tiles.geti(i);
+                    Tile tile = world.tiles.getIndex(i);
                     long write = writeTiles[i];
 
                     Block block = content.block(PackTile.block(write)), floor = content.block(PackTile.floor(write)), overlay = content.block(PackTile.overlay(write));
@@ -429,7 +429,7 @@ public class MapGenerateDialog extends BaseDialog{
                         //get result from buffer1 if there's filters left, otherwise get from editor directly
                         if(filters.isEmpty()){
                             Tile tile = editor.tile(px * scaling, py * scaling);
-                            color = MapIO.colorFor(tile.block(), tile.floor(), tile.overlay(), Team.derelict);
+                            color = MapIO.colorFor(tile.getBlock(), tile.getFloor(), tile.getOverlay(), Team.derelict);
                         }else{
                             long tile = buffer1[px + py*w];
                             color = MapIO.colorFor(content.block(PackTile.block(tile)), content.block(PackTile.floor(tile)), content.block(PackTile.overlay(tile)), Team.derelict);

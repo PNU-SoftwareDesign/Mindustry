@@ -178,7 +178,7 @@ public class PowerNode extends PowerBlock{
     }
 
     protected boolean overlaps(float srcx, float srcy, Tile other, Block otherBlock, float range){
-        return Intersector.overlaps(Tmp.cr1.set(srcx, srcy, range), Tmp.r1.setCentered(other.worldx() + otherBlock.offset, other.worldy() + otherBlock.offset,
+        return Intersector.overlaps(Tmp.cr1.set(srcx, srcy, range), Tmp.r1.setCentered(other.getWorldX() + otherBlock.offset, other.getWorldY() + otherBlock.offset,
             otherBlock.size * tilesize, otherBlock.size * tilesize));
     }
 
@@ -191,12 +191,12 @@ public class PowerNode extends PowerBlock{
     }
 
     protected boolean overlaps(Tile src, Tile other, float range){
-        return overlaps(src.drawx(), src.drawy(), other, range);
+        return overlaps(src.getDrawX(), src.getDrawY(), other, range);
     }
 
     public boolean overlaps(@Nullable Tile src, @Nullable Tile other){
         if(src == null || other == null) return true;
-        return Intersector.overlaps(Tmp.cr1.set(src.worldx() + offset, src.worldy() + offset, laserRange * tilesize), Tmp.r1.setSize(size * tilesize).setCenter(other.worldx() + offset, other.worldy() + offset));
+        return Intersector.overlaps(Tmp.cr1.set(src.getWorldX() + offset, src.getWorldY() + offset, laserRange * tilesize), Tmp.r1.setSize(size * tilesize).setCenter(other.getWorldX() + offset, other.getWorldY() + offset));
     }
 
     protected void getPotentialLinks(Tile tile, Team team, Cons<Building> others){
@@ -269,7 +269,7 @@ public class PowerNode extends PowerBlock{
         for(var p : Edges.getEdges(block.size)){
             Tile other = tile.nearby(p);
             if(other != null && other.team() == team && other.build != null && other.build.power != null
-                && !(block.consumesPower && other.block().consumesPower && !block.outputsPower && !other.block().outputsPower)){
+                && !(block.consumesPower && other.getBlock().consumesPower && !block.outputsPower && !other.getBlock().outputsPower)){
                 graphs.add(other.build.power.graph);
             }
         }
@@ -418,7 +418,7 @@ public class PowerNode extends PowerBlock{
         @Override
         public void drawConfigure(){
 
-            Drawf.circles(x, y, tile.block().size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f));
+            Drawf.circles(x, y, tile.getBlock().size * tilesize / 2f + 1f + Mathf.absin(Time.time, 4f, 1f));
             Drawf.circles(x, y, laserRange * tilesize);
 
             for(int x = (int)(tile.x - laserRange - 2); x <= tile.x + laserRange + 2; x++){

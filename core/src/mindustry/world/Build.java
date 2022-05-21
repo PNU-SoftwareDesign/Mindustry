@@ -36,7 +36,7 @@ public class Build{
         }
 
         int rotation = tile.build != null ? tile.build.rotation : 0;
-        Block previous = tile.block();
+        Block previous = tile.getBlock();
 
         //instantly deconstruct if necessary
         if(previous.instantDeconstruct){
@@ -87,12 +87,12 @@ public class Build{
         //break all props in the way
         tile.getLinkedTilesAs(result, out -> {
             if(out.block != Blocks.air && out.block.alwaysReplace){
-                out.block.breakEffect.at(out.drawx(), out.drawy(), out.block.size, out.block.mapColor);
+                out.block.breakEffect.at(out.getDrawX(), out.getDrawY(), out.block.size, out.block.mapColor);
                 out.remove();
             }
         });
 
-        Block previous = tile.block();
+        Block previous = tile.getBlock();
         Block sub = ConstructBlock.get(result.size);
         Seq<Building> prevBuild = new Seq<>(9);
 
@@ -184,19 +184,19 @@ public class Build{
 
                 if(
                 check == null || //nothing there
-                (check.floor().isDeep() && !type.floating && !type.requiresWater && !type.placeableLiquid) || //deep water
-                (type == check.block() && check.build != null && rotation == check.build.rotation && type.rotate) || //same block, same rotation
+                (check.getFloor().isDeep() && !type.floating && !type.requiresWater && !type.placeableLiquid) || //deep water
+                (type == check.getBlock() && check.build != null && rotation == check.build.rotation && type.rotate) || //same block, same rotation
                 !check.interactable(team) || //cannot interact
-                !check.floor().placeableOn || //solid wall
-                (!checkVisible && !check.block().alwaysReplace) || //replacing a block that should be replaced (e.g. payload placement)
-                    !((type.canReplace(check.block()) || //can replace type
+                !check.getFloor().placeableOn || //solid wall
+                (!checkVisible && !check.getBlock().alwaysReplace) || //replacing a block that should be replaced (e.g. payload placement)
+                    !((type.canReplace(check.getBlock()) || //can replace type
                         //controversial change: allow rebuilding damaged blocks
                         //this could be buggy and abuse-able, so I'm not enabling it yet
                         //note that this requires a change in BuilderComp as well
                         //(type == check.block() && check.centerX() == x && check.centerY() == y && check.build != null && check.build.health < check.build.maxHealth - 0.0001f) ||
-                        (check.build instanceof ConstructBuild build && build.current == type && check.centerX() == tile.x && check.centerY() == tile.y)) && //same type in construction
-                    type.bounds(tile.x, tile.y, Tmp.r1).grow(0.01f).contains(check.block.bounds(check.centerX(), check.centerY(), Tmp.r2))) || //no replacement
-                (type.requiresWater && check.floor().liquidDrop != Liquids.water) //requires water but none found
+                        (check.build instanceof ConstructBuild build && build.current == type && check.getCenterX() == tile.x && check.getCenterY() == tile.y)) && //same type in construction
+                    type.bounds(tile.x, tile.y, Tmp.r1).grow(0.01f).contains(check.block.bounds(check.getCenterX(), check.getCenterY(), Tmp.r2))) || //no replacement
+                (type.requiresWater && check.getFloor().liquidDrop != Liquids.water) //requires water but none found
                 ) return false;
             }
         }
@@ -208,12 +208,12 @@ public class Build{
         if(block.isMultiblock()){
             for(Point2 point : Edges.getEdges(block.size)){
                 Tile tile = world.tile(x + point.x, y + point.y);
-                if(tile != null && !tile.floor().isLiquid) return true;
+                if(tile != null && !tile.getFloor().isLiquid) return true;
             }
         }else{
             for(Point2 point : Geometry.d4){
                 Tile tile = world.tile(x + point.x, y + point.y);
-                if(tile != null && !tile.floor().isLiquid) return true;
+                if(tile != null && !tile.getFloor().isLiquid) return true;
             }
         }
         return false;
@@ -223,20 +223,20 @@ public class Build{
         if(block.isMultiblock()){
             for(Point2 point : Edges.getInsideEdges(block.size)){
                 Tile tile = world.tile(x + point.x, y + point.y);
-                if(tile != null && !tile.floor().isDeep()) return true;
+                if(tile != null && !tile.getFloor().isDeep()) return true;
             }
 
             for(Point2 point : Edges.getEdges(block.size)){
                 Tile tile = world.tile(x + point.x, y + point.y);
-                if(tile != null && !tile.floor().isDeep()) return true;
+                if(tile != null && !tile.getFloor().isDeep()) return true;
             }
         }else{
             for(Point2 point : Geometry.d4){
                 Tile tile = world.tile(x + point.x, y + point.y);
-                if(tile != null && !tile.floor().isDeep()) return true;
+                if(tile != null && !tile.getFloor().isDeep()) return true;
             }
             Tile tile = world.tile(x, y);
-            return tile != null && !tile.floor().isDeep();
+            return tile != null && !tile.getFloor().isDeep();
         }
         return false;
     }
@@ -244,6 +244,6 @@ public class Build{
     /** Returns whether the tile at this position is breakable by this team */
     public static boolean validBreak(Team team, int x, int y){
         Tile tile = world.tile(x, y);
-        return tile != null && tile.block().canBreak(tile) && tile.breakable() && tile.interactable(team);
+        return tile != null && tile.getBlock().canBreak(tile) && tile.breakable() && tile.interactable(team);
     }
 }

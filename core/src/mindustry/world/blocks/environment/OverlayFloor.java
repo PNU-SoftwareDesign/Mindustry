@@ -14,6 +14,6 @@ public class OverlayFloor extends Floor{
 
     @Override
     public void drawBase(Tile tile){
-        Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.worldx(), tile.worldy());
+        Draw.rect(variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))], tile.getWorldX(), tile.getWorldY());
     }
 }

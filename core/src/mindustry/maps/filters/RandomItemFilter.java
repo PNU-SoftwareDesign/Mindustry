@@ -18,10 +18,10 @@ public class RandomItemFilter extends GenerateFilter{
     @Override
     public void apply(Tiles tiles, GenerateInput in){
         for(Tile tile : tiles){
-            if(tile.block() instanceof StorageBlock && !(tile.block() instanceof CoreBlock)){
+            if(tile.getBlock() instanceof StorageBlock && !(tile.getBlock() instanceof CoreBlock)){
                 for(ItemStack stack : drops){
                     if(Mathf.chance(chance)){
-                        tile.build.items.add(stack.item, Math.min(Mathf.random(stack.amount), tile.block().itemCapacity));
+                        tile.build.items.add(stack.item, Math.min(Mathf.random(stack.amount), tile.getBlock().itemCapacity));
                     }
                 }
             }

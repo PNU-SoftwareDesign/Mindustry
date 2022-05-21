@@ -287,7 +287,7 @@ public class BaseAI{
             for(int wy = lastY; wy <= lastY + lastH; wy++){
                 Tile tile = world.tile(wx, wy);
 
-                if(tile == null || !tile.block().alwaysReplace) continue;
+                if(tile == null || !tile.getBlock().alwaysReplace) continue;
 
                 boolean any = false;
 
@@ -297,11 +297,11 @@ public class BaseAI{
                     }
 
                     Tile o = world.tile(tile.x + p.x, tile.y + p.y);
-                    if(o != null && (o.block() instanceof PayloadBlock || o.block() instanceof PayloadConveyor || o.block() instanceof ShockMine)){
+                    if(o != null && (o.getBlock() instanceof PayloadBlock || o.getBlock() instanceof PayloadConveyor || o.getBlock() instanceof ShockMine)){
                         continue outer;
                     }
 
-                    if(o != null && o.team() == data.team && !(o.block() instanceof Wall)){
+                    if(o != null && o.team() == data.team && !(o.getBlock() instanceof Wall)){
                         any = true;
                     }
                 }

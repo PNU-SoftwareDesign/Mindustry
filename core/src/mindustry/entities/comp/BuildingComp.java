@@ -84,7 +84,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
     /** Sets this tile entity data to this and adds it if necessary. */
     public Building init(Tile tile, Team team, boolean shouldAdd, int rotation){
         if(!initialized){
-            create(tile.block(), team);
+            create(tile.getBlock(), team);
         }else{
             if(block.hasPower){
                 power.init = false;
@@ -96,7 +96,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
         this.rotation = rotation;
         this.tile = tile;
 
-        set(tile.drawx(), tile.drawy());
+        set(tile.getDrawX(), tile.getDrawY());
 
         if(shouldAdd){
             add();
@@ -338,7 +338,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
     }
 
     public Floor floor(){
-        return tile.floor();
+        return tile.getFloor();
     }
 
     public boolean interactable(Team team){
@@ -623,7 +623,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
 
         if(next.build != null){
             return moveLiquid(next.build, liquid);
-        }else if(leaks && !next.block().solid && !next.block().hasLiquids){
+        }else if(leaks && !next.getBlock().solid && !next.getBlock().hasLiquids){
             float leakAmount = liquids.get(liquid) / 1.5f;
             Puddles.deposit(next, tile, liquid, leakAmount);
             liquids.remove(liquid, leakAmount);
@@ -1420,7 +1420,7 @@ abstract class BuildingComp implements Posc, Teamc, Healthc, Buildingc, Timerc, 
 
     @Override
     public float hitSize(){
-        return tile.block().size * tilesize;
+        return tile.getBlock().size * tilesize;
     }
 
     @Replace

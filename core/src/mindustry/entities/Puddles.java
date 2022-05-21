@@ -32,20 +32,20 @@ public class Puddles{
     public static void deposit(Tile tile, Tile source, Liquid liquid, float amount, boolean initial){
         if(tile == null) return;
 
-        if(tile.floor().isLiquid && !canStayOn(liquid, tile.floor().liquidDrop)){
-            reactPuddle(tile.floor().liquidDrop, liquid, amount, tile,
-            (tile.worldx() + source.worldx()) / 2f, (tile.worldy() + source.worldy()) / 2f);
+        if(tile.getFloor().isLiquid && !canStayOn(liquid, tile.getFloor().liquidDrop)){
+            reactPuddle(tile.getFloor().liquidDrop, liquid, amount, tile,
+            (tile.getWorldX() + source.getWorldX()) / 2f, (tile.getWorldY() + source.getWorldY()) / 2f);
 
             Puddle p = map.get(tile.pos());
 
             if(initial && p != null && p.lastRipple <= Time.time - 40f){
-                Fx.ripple.at((tile.worldx() + source.worldx()) / 2f, (tile.worldy() + source.worldy()) / 2f, 1f, tile.floor().liquidDrop.color);
+                Fx.ripple.at((tile.getWorldX() + source.getWorldX()) / 2f, (tile.getWorldY() + source.getWorldY()) / 2f, 1f, tile.getFloor().liquidDrop.color);
                 p.lastRipple = Time.time;
             }
             return;
         }
 
-        if(tile.floor().solid) return;
+        if(tile.getFloor().solid) return;
 
         Puddle p = map.get(tile.pos());
         if(p == null){
@@ -53,18 +53,18 @@ public class Puddles{
             puddle.tile = tile;
             puddle.liquid = liquid;
             puddle.amount = amount;
-            puddle.set((tile.worldx() + source.worldx()) / 2f, (tile.worldy() + source.worldy()) / 2f);
+            puddle.set((tile.getWorldX() + source.getWorldX()) / 2f, (tile.getWorldY() + source.getWorldY()) / 2f);
             map.put(tile.pos(), puddle);
             puddle.add();
         }else if(p.liquid == liquid){
             p.accepting = Math.max(amount, p.accepting);
 
             if(initial && p.lastRipple <= Time.time - 40f && p.amount >= maxLiquid / 2f){
-                Fx.ripple.at((tile.worldx() + source.worldx()) / 2f, (tile.worldy() + source.worldy()) / 2f, 1f, p.liquid.color);
+                Fx.ripple.at((tile.getWorldX() + source.getWorldX()) / 2f, (tile.getWorldY() + source.getWorldY()) / 2f, 1f, p.liquid.color);
                 p.lastRipple = Time.time;
             }
         }else{
-            p.amount += reactPuddle(p.liquid, liquid, amount, p.tile, (p.x + source.worldx())/2f, (p.y + source.worldy())/2f);
+            p.amount += reactPuddle(p.liquid, liquid, amount, p.tile, (p.x + source.getWorldX())/2f, (p.y + source.getWorldY())/2f);
         }
     }
 

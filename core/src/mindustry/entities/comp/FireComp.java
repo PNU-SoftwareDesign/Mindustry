@@ -66,9 +66,9 @@ abstract class FireComp implements Timedc, Posc, Syncc, Drawc{
         Building entity = tile.build;
         boolean damage = entity != null;
 
-        if(baseFlammability < 0 || block != tile.block()){
+        if(baseFlammability < 0 || block != tile.getBlock()){
             baseFlammability = tile.getFlammability();
-            block = tile.block();
+            block = tile.getBlock();
         }
 
         float flammability = baseFlammability + puddleFlammability;
@@ -102,7 +102,7 @@ abstract class FireComp implements Timedc, Posc, Syncc, Drawc{
             if(damage){
                 entity.damage(tileDamage);
             }
-            Damage.damageUnits(null, tile.worldx(), tile.worldy(), tilesize, unitDamage,
+            Damage.damageUnits(null, tile.getWorldX(), tile.getWorldY(), tilesize, unitDamage,
             unit -> !unit.isFlying() && !unit.isImmune(StatusEffects.burning),
             unit -> unit.apply(StatusEffects.burning, 60 * 5));
         }

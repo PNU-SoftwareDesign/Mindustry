@@ -46,11 +46,11 @@ public class MinerAI extends AIController{
                 if(ore != null){
                     moveTo(ore, unit.type.miningRange / 2f, 20f);
 
-                    if(ore.block() == Blocks.air && unit.within(ore, unit.type.miningRange)){
+                    if(ore.getBlock() == Blocks.air && unit.within(ore, unit.type.miningRange)){
                         unit.mineTile = ore;
                     }
 
-                    if(ore.block() != Blocks.air){
+                    if(ore.getBlock() != Blocks.air){
                         mining = false;
                     }
                 }

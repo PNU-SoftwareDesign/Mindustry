@@ -105,7 +105,7 @@ public abstract class BasicGenerator implements WorldGenerator{
             if(noise(octaves, falloff, scl, x, y) > threshold){
                 Tile tile = tiles.getn(x, y);
                 this.floor = floor;
-                if(tile.block().solid){
+                if(tile.getBlock().solid){
                     this.block = block;
                 }
             }
@@ -114,7 +114,7 @@ public abstract class BasicGenerator implements WorldGenerator{
 
     public void overlay(Block floor, Block block, float chance, int octaves, float falloff, float scl, float threshold){
         pass((x, y) -> {
-            if(noise(x, y, octaves, falloff, scl) > threshold && Mathf.chance(chance) && tiles.getn(x, y).floor() == floor){
+            if(noise(x, y, octaves, falloff, scl) > threshold && Mathf.chance(chance) && tiles.getn(x, y).getFloor() == floor){
                 ore = block;
             }
         });
@@ -154,12 +154,12 @@ public abstract class BasicGenerator implements WorldGenerator{
             int idx = y*tiles.width + x;
             float cx = x + noise(x - 155f, y - 200f, scl, mag) - mag / 2f, cy = y + noise(x + 155f, y + 155f, scl, mag) - mag / 2f;
             Tile other = tiles.getn(Mathf.clamp((int)cx, 0, tiles.width-1), Mathf.clamp((int)cy, 0, tiles.height-1));
-            blocks[idx] = other.block().id;
-            floors[idx] = other.floor().id;
+            blocks[idx] = other.getBlock().id;
+            floors[idx] = other.getFloor().id;
         });
 
         for(int i = 0; i < blocks.length; i++){
-            Tile tile = tiles.geti(i);
+            Tile tile = tiles.getIndex(i);
             tile.setFloor(Vars.content.block(floors[i]).asFloor());
             tile.setBlock(Vars.content.block(blocks[i]));
         }
@@ -192,7 +192,7 @@ public abstract class BasicGenerator implements WorldGenerator{
         GridBits write = new GridBits(tiles.width, tiles.height);
         GridBits read = new GridBits(tiles.width, tiles.height);
 
-        tiles.each((x, y) -> read.set(x, y, !tiles.get(x, y).block().isAir()));
+        tiles.each((x, y) -> read.set(x, y, !tiles.get(x, y).getBlock().isAir()));
 
         for(int i = 0; i < iterations; i++){
             tiles.each((x, y) -> {
@@ -219,7 +219,7 @@ public abstract class BasicGenerator implements WorldGenerator{
         }
 
         for(var t : tiles){
-            t.setBlock(!read.get(t.x, t.y) ? Blocks.air : t.floor().wall);
+            t.setBlock(!read.get(t.x, t.y) ? Blocks.air : t.getFloor().wall);
         }
     }
 
@@ -235,9 +235,9 @@ public abstract class BasicGenerator implements WorldGenerator{
 
     public void pass(Intc2 r){
         for(Tile tile : tiles){
-            floor = tile.floor();
-            block = tile.block();
-            ore = tile.overlay();
+            floor = tile.getFloor();
+            block = tile.getBlock();
+            ore = tile.getOverlay();
             r.get(tile.x, tile.y);
             tile.setFloor(floor.asFloor());
             tile.setBlock(block);
@@ -273,7 +273,7 @@ public abstract class BasicGenerator implements WorldGenerator{
             }
 
             if(any){
-                tile.setBlock(tile.floor().wall);
+                tile.setBlock(tile.getFloor().wall);
             }
         }
     }
@@ -289,9 +289,9 @@ public abstract class BasicGenerator implements WorldGenerator{
             used.set(x, y);
             for(Point2 point : Geometry.d4){
                 int newx = x + point.x, newy = y + point.y;
-                if(tiles.in(newx, newy)){
+                if(tiles.isInBounds(newx, newy)){
                     Tile child = tiles.getn(newx, newy);
-                    if(child.block() == Blocks.air && !used.get(child.x, child.y)){
+                    if(child.getBlock() == Blocks.air && !used.get(child.x, child.y)){
                         used.set(child.x, child.y);
                         arr.add(child.pos());
                     }
@@ -300,8 +300,8 @@ public abstract class BasicGenerator implements WorldGenerator{
         }
 
         for(Tile tile : tiles){
-            if(!used.get(tile.x, tile.y) && tile.block() == Blocks.air){
-                tile.setBlock(tile.floor().wall);
+            if(!used.get(tile.x, tile.y) && tile.getBlock() == Blocks.air){
+                tile.setBlock(tile.getFloor().wall);
             }
         }
     }

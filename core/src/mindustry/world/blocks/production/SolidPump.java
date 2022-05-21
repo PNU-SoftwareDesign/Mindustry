@@ -66,7 +66,7 @@ public class SolidPump extends Pump{
 
     @Override
     public boolean canPlaceOn(Tile tile, Team team, int rotation){
-        float sum = tile.getLinkedTilesAs(this, tempTiles).sumf(t -> canPump(t) ? baseEfficiency + (attribute != null ? t.floor().attributes.get(attribute) : 0f) : 0f);
+        float sum = tile.getLinkedTilesAs(this, tempTiles).sumf(t -> canPump(t) ? baseEfficiency + (attribute != null ? t.getFloor().attributes.get(attribute) : 0f) : 0f);
         return sum > 0.00001f;
     }
 
@@ -77,7 +77,7 @@ public class SolidPump extends Pump{
 
     @Override
     protected boolean canPump(Tile tile){
-        return tile != null && !tile.floor().isLiquid;
+        return tile != null && !tile.getFloor().isLiquid;
     }
 
     @Override

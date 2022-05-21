@@ -18,7 +18,7 @@ public class StaticClusterWall extends StaticWall{
         super.drawBase(tile);
 
         if(Mathf.randomSeed(tile.pos(), 10) < 2){
-            Draw.rect(clusters[0], tile.worldx(), tile.worldy(), Mathf.randomSeedRange(tile.pos() + 1, 180f));
+            Draw.rect(clusters[0], tile.getWorldX(), tile.getWorldY(), Mathf.randomSeedRange(tile.pos() + 1, 180f));
         }
     }
 

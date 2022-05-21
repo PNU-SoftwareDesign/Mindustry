@@ -43,10 +43,10 @@ public class FileMapGenerator implements WorldGenerator{
         Item[] items = {Items.blastCompound, Items.pyratite, Items.copper, Items.thorium, Items.copper, Items.lead};
 
         for(Tile tile : tiles){
-            if(tile.block() instanceof StorageBlock && !(tile.block() instanceof CoreBlock) && state.hasSector()){
+            if(tile.getBlock() instanceof StorageBlock && !(tile.getBlock() instanceof CoreBlock) && state.hasSector()){
                 for(Item content : items){
                     if(Mathf.chance(0.2)){
-                        tile.build.items.add(content, Math.min(Mathf.random(500), tile.block().itemCapacity));
+                        tile.build.items.add(content, Math.min(Mathf.random(500), tile.getBlock().itemCapacity));
                     }
                 }
             }
@@ -56,16 +56,16 @@ public class FileMapGenerator implements WorldGenerator{
 
         for(Tile tile : tiles){
 
-            if(tile.overlay() == Blocks.spawn){
+            if(tile.getOverlay() == Blocks.spawn){
                 int rad = 10;
                 Geometry.circle(tile.x, tile.y, tiles.width, tiles.height, rad, (wx, wy) -> {
-                    if(tile.overlay().itemDrop != null){
+                    if(tile.getOverlay().itemDrop != null){
                         tile.clearOverlay();
                     }
                 });
             }
 
-            if(tile.isCenter() && tile.block() instanceof CoreBlock && tile.team() == state.rules.defaultTeam && !anyCores){
+            if(tile.isCenter() && tile.getBlock() instanceof CoreBlock && tile.team() == state.rules.defaultTeam && !anyCores){
                 Schematics.placeLaunchLoadout(tile.x, tile.y);
                 anyCores = true;
 

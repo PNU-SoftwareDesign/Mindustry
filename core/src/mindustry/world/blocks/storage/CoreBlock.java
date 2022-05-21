@@ -61,7 +61,7 @@ public class CoreBlock extends StorageBlock{
     public static void playerSpawn(Tile tile, Player player){
         if(player == null || tile == null || !(tile.build instanceof CoreBuild entity)) return;
 
-        CoreBlock block = (CoreBlock)tile.block();
+        CoreBlock block = (CoreBlock)tile.getBlock();
         Fx.spawn.at(entity);
 
         player.set(entity);
@@ -125,7 +125,7 @@ public class CoreBlock extends StorageBlock{
         CoreBuild core = team.core();
         //must have all requirements
         if(core == null || (!state.rules.infiniteResources && !core.items.has(requirements, state.rules.buildCostMultiplier))) return false;
-        return tile.block() instanceof CoreBlock && size > tile.block().size;
+        return tile.getBlock() instanceof CoreBlock && size > tile.getBlock().size;
     }
 
     @Override
@@ -133,8 +133,8 @@ public class CoreBlock extends StorageBlock{
         //finish placement immediately when a block is replaced.
         if(previous instanceof CoreBlock){
             tile.setBlock(this, tile.team());
-            Fx.placeBlock.at(tile, tile.block().size);
-            Fx.upgradeCore.at(tile, tile.block().size);
+            Fx.placeBlock.at(tile, tile.getBlock().size);
+            Fx.upgradeCore.at(tile, tile.getBlock().size);
 
             //set up the correct items
             if(nextItems != null){

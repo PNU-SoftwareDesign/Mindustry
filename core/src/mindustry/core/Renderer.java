@@ -411,7 +411,7 @@ public class Renderer implements ApplicationListener{
         if(landCore != null && landPTimer >= 1f){
             landCore.tile.getLinkedTiles(t -> {
                 if(Mathf.chance(0.4f)){
-                    Fx.coreLandDust.at(t.worldx(), t.worldy(), landCore.angleTo(t) + Mathf.range(30f), Tmp.c1.set(t.floor().mapColor).mul(1.5f + Mathf.range(0.15f)));
+                    Fx.coreLandDust.at(t.getWorldX(), t.getWorldY(), landCore.angleTo(t) + Mathf.range(30f), Tmp.c1.set(t.getFloor().mapColor).mul(1.5f + Mathf.range(0.15f)));
                 }
             });
 

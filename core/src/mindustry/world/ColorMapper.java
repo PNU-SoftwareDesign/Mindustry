@@ -8,7 +8,7 @@ import mindustry.content.*;
 public class ColorMapper{
     private static final IntMap<Block> color2block = new IntMap<>();
 
-    public static Block get(int color){
+    public static Block getBlock(int color){
         return color2block.get(color, Blocks.air);
     }
 

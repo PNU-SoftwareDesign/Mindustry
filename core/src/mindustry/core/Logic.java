@@ -36,7 +36,7 @@ public class Logic implements ApplicationListener{
             //blocks that get broken are appended to the team's broken block queue
             Tile tile = event.tile;
             //skip null entities or un-rebuildables, for obvious reasons
-            if(tile.build == null || !tile.block().rebuildable) return;
+            if(tile.build == null || !tile.getBlock().rebuildable) return;
 
             tile.build.addPlan(true);
         });
@@ -48,7 +48,7 @@ public class Logic implements ApplicationListener{
                 while(it.hasNext()){
                     BlockPlan b = it.next();
                     Block block = content.block(b.block);
-                    if(event.tile.block().bounds(event.tile.x, event.tile.y, Tmp.r1).overlaps(block.bounds(b.x, b.y, Tmp.r2))){
+                    if(event.tile.getBlock().bounds(event.tile.x, event.tile.y, Tmp.r1).overlaps(block.bounds(b.x, b.y, Tmp.r2))){
                         b.removed = true;
                         it.remove();
                     }

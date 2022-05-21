@@ -88,7 +88,7 @@ public class EditorTile extends Tile{
         }
 
         if(!floor.hasSurface() && overlay.asFloor().needsSurface) return;
-        if(overlay() == overlay) return;
+        if(getOverlay() == overlay) return;
         op(OpType.overlay, this.overlay.id);
         super.setOverlay(overlay);
     }
@@ -128,7 +128,7 @@ public class EditorTile extends Tile{
         if(block == null) block = Blocks.air;
         if(floor == null) floor = (Floor)Blocks.air;
         
-        Block block = block();
+        Block block = getBlock();
 
         if(block.hasBuilding()){
             build = entityprov.get().init(this, team, false, rotation);

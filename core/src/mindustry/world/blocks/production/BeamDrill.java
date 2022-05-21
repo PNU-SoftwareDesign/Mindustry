@@ -187,7 +187,7 @@ public class BeamDrill extends Block{
 
                 facing[p] = dest;
                 if(cons && dest != null && Mathf.chanceDelta(0.05 * warmup)){
-                    updateEffect.at(dest.worldx() + Mathf.range(4f), dest.worldy() + Mathf.range(4f), dest.wallDrop().color);
+                    updateEffect.at(dest.getWorldX() + Mathf.range(4f), dest.getWorldY() + Mathf.range(4f), dest.wallDrop().color);
                 }
             }
 
@@ -231,7 +231,7 @@ public class BeamDrill extends Block{
                 if(face != null){
                     Point2 p = lasers[i];
                     Drawf.laser(team, laser, laserEnd, (p.x - dir.x/2f) * tilesize, (p.y - dir.y/2f) * tilesize,
-                        face.worldx() - (dir.x/2f)*(tilesize), face.worldy() - (dir.y/2f)*(tilesize),
+                        face.getWorldX() - (dir.x/2f)*(tilesize), face.getWorldY() - (dir.y/2f)*(tilesize),
                     (laserWidth + Mathf.absin(Time.time + i*4 + (id%20)*6, 3f, 0.07f)) * warmup);
                 }
             }

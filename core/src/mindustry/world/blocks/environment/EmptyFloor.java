@@ -19,7 +19,7 @@ public class EmptyFloor extends Floor{
         //draws only edges, never itself
         drawEdges(tile);
 
-        Floor floor = tile.overlay();
+        Floor floor = tile.getOverlay();
         if(floor != Blocks.air && floor != this){
             floor.drawBase(tile);
         }

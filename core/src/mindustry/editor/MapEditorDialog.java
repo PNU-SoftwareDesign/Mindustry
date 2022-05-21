@@ -636,12 +636,12 @@ public class MapEditorDialog extends Dialog implements Disposable{
                 for(int x = 0; x < editor.width(); x++){
                     for(int y = 0; y < editor.height(); y++){
                         Tile tile = editor.tile(x, y);
-                        if(tile.block().breakable && tile.block() instanceof Prop){
+                        if(tile.getBlock().breakable && tile.getBlock() instanceof Prop){
                             tile.setBlock(Blocks.air);
                             editor.renderer.updatePoint(x, y);
                         }
 
-                        if(tile.overlay() != Blocks.air && tile.overlay() != Blocks.spawn){
+                        if(tile.getOverlay() != Blocks.air && tile.getOverlay() != Blocks.spawn){
                             tile.setOverlay(Blocks.air);
                             editor.renderer.updatePoint(x, y);
                         }

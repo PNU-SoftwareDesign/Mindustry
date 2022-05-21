@@ -104,9 +104,9 @@ public class AIController implements UnitController{
         if(tile == null) return;
         Tile targetTile = pathfinder.getTargetTile(tile, pathfinder.getField(unit.team, costType, pathTarget));
 
-        if(tile == targetTile || (costType == Pathfinder.costNaval && !targetTile.floor().isLiquid)) return;
+        if(tile == targetTile || (costType == Pathfinder.costNaval && !targetTile.getFloor().isLiquid)) return;
 
-        unit.movePref(vec.trns(unit.angleTo(targetTile.worldx(), targetTile.worldy()), unit.speed()));
+        unit.movePref(vec.trns(unit.angleTo(targetTile.getWorldX(), targetTile.getWorldY()), unit.speed()));
     }
 
     public void updateWeapons(){

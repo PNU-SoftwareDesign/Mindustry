@@ -131,8 +131,8 @@ public class ItemBridge extends Block{
     public boolean linkValid(Tile tile, Tile other, boolean checkDouble){
         if(other == null || tile == null || !positionsValid(tile.x, tile.y, other.x, other.y)) return false;
 
-        return ((other.block() == tile.block() && tile.block() == this) || (!(tile.block() instanceof ItemBridge) && other.block() == this))
-            && (other.team() == tile.team() || tile.block() != this)
+        return ((other.getBlock() == tile.getBlock() && tile.getBlock() == this) || (!(tile.getBlock() instanceof ItemBridge) && other.getBlock() == this))
+            && (other.team() == tile.team() || tile.getBlock() != this)
             && (!checkDouble || ((ItemBridgeBuild)other.build).link != tile.pos());
     }
 
@@ -217,8 +217,8 @@ public class ItemBridge extends Block{
             boolean linked = other.pos() == link;
 
             Tmp.v2.trns(tile.angleTo(other), 2f);
-            float tx = tile.drawx(), ty = tile.drawy();
-            float ox = other.drawx(), oy = other.drawy();
+            float tx = tile.getDrawX(), ty = tile.getDrawY();
+            float ox = other.getDrawX(), oy = other.getDrawY();
             float alpha = Math.abs((linked ? 100 : 0)-(Time.time * 2f) % 100f) / 100f;
             float x = Mathf.lerp(ox, tx, alpha);
             float y = Mathf.lerp(oy, ty, alpha);
@@ -247,7 +247,7 @@ public class ItemBridge extends Block{
 
         @Override
         public void drawConfigure(){
-            Drawf.select(x, y, tile.block().size * tilesize / 2f + 2f, Pal.accent);
+            Drawf.select(x, y, tile.getBlock().size * tilesize / 2f + 2f, Pal.accent);
 
             for(int i = 1; i <= range; i++){
                 for(int j = 0; j < 4; j++){
@@ -255,8 +255,8 @@ public class ItemBridge extends Block{
                     if(linkValid(tile, other)){
                         boolean linked = other.pos() == link;
 
-                        Drawf.select(other.drawx(), other.drawy(),
-                            other.block().size * tilesize / 2f + 2f + (linked ? 0f : Mathf.absin(Time.time, 4f, 1f)), linked ? Pal.place : Pal.breakInvalid);
+                        Drawf.select(other.getDrawX(), other.getDrawY(),
+                            other.getBlock().size * tilesize / 2f + 2f + (linked ? 0f : Mathf.absin(Time.time, 4f, 1f)), linked ? Pal.place : Pal.breakInvalid);
                     }
                 }
             }
@@ -367,17 +367,17 @@ public class ItemBridge extends Block{
             Draw.alpha((fadeIn ? Math.max(warmup, 0.25f) : 1f) * Renderer.bridgeOpacity);
 
             Draw.rect(endRegion, x, y, i * 90 + 90);
-            Draw.rect(endRegion, other.drawx(), other.drawy(), i * 90 + 270);
+            Draw.rect(endRegion, other.getDrawX(), other.getDrawY(), i * 90 + 270);
 
             Lines.stroke(8f);
 
-            Tmp.v1.set(x, y).sub(other.worldx(), other.worldy()).setLength(tilesize/2f).scl(-1f);
+            Tmp.v1.set(x, y).sub(other.getWorldX(), other.getWorldY()).setLength(tilesize/2f).scl(-1f);
 
             Lines.line(bridgeRegion,
             x + Tmp.v1.x,
             y + Tmp.v1.y,
-            other.worldx() - Tmp.v1.x,
-            other.worldy() - Tmp.v1.y, false);
+            other.getWorldX() - Tmp.v1.x,
+            other.getWorldY() - Tmp.v1.y, false);
 
             int dist = Math.max(Math.abs(other.x - tile.x), Math.abs(other.y - tile.y)) - 1;
 

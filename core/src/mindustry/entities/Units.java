@@ -117,8 +117,8 @@ public class Units{
 
     /** Returns whether there are any entities on this tile. */
     public static boolean anyEntities(Tile tile, boolean ground){
-        float size = tile.block().size * tilesize;
-        return anyEntities(tile.drawx() - size/2f, tile.drawy() - size/2f, size, size, ground);
+        float size = tile.getBlock().size * tilesize;
+        return anyEntities(tile.getDrawX() - size/2f, tile.getDrawY() - size/2f, size, size, ground);
     }
 
     /** Returns whether there are any entities on this tile. */

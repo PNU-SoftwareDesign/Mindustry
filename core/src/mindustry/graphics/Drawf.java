@@ -84,7 +84,7 @@ public class Drawf{
     }
 
     public static void selected(Tile tile, Color color){
-        selected(tile.x, tile.y, tile.block(), color);
+        selected(tile.x, tile.y, tile.getBlock(), color);
     }
 
     public static void selected(int x, int y, Block block, Color color){

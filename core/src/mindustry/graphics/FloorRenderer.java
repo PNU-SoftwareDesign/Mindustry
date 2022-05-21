@@ -281,14 +281,14 @@ public class FloorRenderer{
         for(int tilex = cx * chunksize; tilex < (cx + 1) * chunksize && tilex < world.width(); tilex++){
             for(int tiley = cy * chunksize; tiley < (cy + 1) * chunksize && tiley < world.height(); tiley++){
                 Tile tile = world.rawTile(tilex, tiley);
-                boolean wall = tile.block().cacheLayer != CacheLayer.normal;
+                boolean wall = tile.getBlock().cacheLayer != CacheLayer.normal;
 
                 if(wall){
-                    used.add(tile.block().cacheLayer);
+                    used.add(tile.getBlock().cacheLayer);
                 }
 
                 if(!wall || world.isAccessible(tilex, tiley)){
-                    used.add(tile.floor().cacheLayer);
+                    used.add(tile.getFloor().cacheLayer);
                 }
             }
         }
@@ -325,12 +325,12 @@ public class FloorRenderer{
                 if(tile == null){
                     continue;
                 }else{
-                    floor = tile.floor();
+                    floor = tile.getFloor();
                 }
 
-                if(tile.block().cacheLayer == layer && layer == CacheLayer.walls && !(tile.isDarkened() && tile.data >= 5)){
-                    tile.block().drawBase(tile);
-                }else if(floor.cacheLayer == layer && (world.isAccessible(tile.x, tile.y) || tile.block().cacheLayer != CacheLayer.walls || !tile.block().fillsTile)){
+                if(tile.getBlock().cacheLayer == layer && layer == CacheLayer.walls && !(tile.isDarkened() && tile.data >= 5)){
+                    tile.getBlock().drawBase(tile);
+                }else if(floor.cacheLayer == layer && (world.isAccessible(tile.x, tile.y) || tile.getBlock().cacheLayer != CacheLayer.walls || !tile.getBlock().fillsTile)){
                     floor.drawBase(tile);
                 }else if(floor.cacheLayer != layer && layer != CacheLayer.walls){
                     floor.drawNonLayer(tile, layer);

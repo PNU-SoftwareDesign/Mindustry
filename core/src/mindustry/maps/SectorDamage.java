@@ -157,8 +157,8 @@ public class SectorDamage{
             for(Tile spawner : spawner.getSpawns()){
                 spawner.circle((int)(state.rules.dropZoneRadius / tilesize), tile -> {
                     if(tile.team() == state.rules.defaultTeam){
-                        if(rubble && tile.floor().hasSurface() && Mathf.chance(0.4)){
-                            Effect.rubble(tile.build.x, tile.build.y, tile.block().size);
+                        if(rubble && tile.getFloor().hasSurface() && Mathf.chance(0.4)){
+                            Effect.rubble(tile.build.x, tile.build.y, tile.getBlock().size);
                         }
 
                         tile.remove();
@@ -218,7 +218,7 @@ public class SectorDamage{
         }
 
         if(!found){
-            path = Astar.pathfind(start, core.tile, SectorDamage::cost, t -> !(t.block().isStatic() && t.solid()));
+            path = Astar.pathfind(start, core.tile, SectorDamage::cost, t -> !(t.getBlock().isStatic() && t.solid()));
         }
 
         //create sparse tile array for fast range query
@@ -257,8 +257,8 @@ public class SectorDamage{
 
                         if(tile.build != null && tile.team() == state.rules.defaultTeam && counted.add(tile.pos())){
                             //health is divided by block size, because multiblocks are counted multiple times.
-                            sumHealth += tile.build.health / (tile.block().size * tile.block().size);
-                            totalPathBuild += 1f / (tile.block().size * tile.block().size);
+                            sumHealth += tile.build.health / (tile.getBlock().size * tile.getBlock().size);
+                            totalPathBuild += 1f / (tile.getBlock().size * tile.getBlock().size);
                         }
                     }
                 }
@@ -392,7 +392,7 @@ public class SectorDamage{
 
         //phase one: find all spawnpoints
         for(Tile tile : tiles){
-            if((tile.block() instanceof CoreBlock && tile.team() == state.rules.waveTeam) || tile.overlay() == Blocks.spawn){
+            if((tile.getBlock() instanceof CoreBlock && tile.team() == state.rules.waveTeam) || tile.getOverlay() == Blocks.spawn){
                 frontier.add(tile);
                 values[tile.x][tile.y] = fraction * 24;
             }
@@ -402,7 +402,7 @@ public class SectorDamage{
         if(core != null && !frontier.isEmpty()){
             for(Tile spawner : frontier){
                 //find path from spawn to core
-                Seq<Tile> path = Astar.pathfind(spawner, core.tile, SectorDamage::cost, t -> !(t.block().isStatic() && t.solid()));
+                Seq<Tile> path = Astar.pathfind(spawner, core.tile, SectorDamage::cost, t -> !(t.getBlock().isStatic() && t.solid()));
                 Seq<Building> removal = new Seq<>();
 
                 int radius = 3;
@@ -415,8 +415,8 @@ public class SectorDamage{
                             int wx = dx + t.x, wy = dy + t.y;
                             if(wx >= 0 && wy >= 0 && wx < world.width() && wy < world.height() && Mathf.within(dx, dy, radius)){
                                 Tile other = world.rawTile(wx, wy);
-                                if(!(other.block() instanceof CoreBlock)){
-                                    s += other.team() == state.rules.defaultTeam ? other.build.health / (other.block().size * other.block().size) : 0f;
+                                if(!(other.getBlock() instanceof CoreBlock)){
+                                    s += other.team() == state.rules.defaultTeam ? other.build.health / (other.getBlock().size * other.getBlock().size) : 0f;
                                 }
                             }
                         }
@@ -437,9 +437,9 @@ public class SectorDamage{
                                 Tile other = world.rawTile(wx, wy);
 
                                 //just remove all the buildings in the way - as long as they're not cores
-                                if(other.build != null && other.team() == state.rules.defaultTeam && !(other.block() instanceof CoreBlock)){
-                                    if(rubble && !other.floor().solid && !other.floor().isLiquid && Mathf.chance(0.4)){
-                                        Effect.rubble(other.build.x, other.build.y, other.block().size);
+                                if(other.build != null && other.team() == state.rules.defaultTeam && !(other.getBlock() instanceof CoreBlock)){
+                                    if(rubble && !other.getFloor().solid && !other.getFloor().isLiquid && Mathf.chance(0.4)){
+                                        Effect.rubble(other.build.x, other.build.y, other.getBlock().size);
                                     }
 
                                     //since the whole block is removed, count the whole health
@@ -486,7 +486,7 @@ public class SectorDamage{
                     int cx = tile.x + Geometry.d4x[i], cy = tile.y + Geometry.d4y[i];
 
                     //propagate to new tiles
-                    if(tiles.in(cx, cy) && values[cx][cy] < currDamage){
+                    if(tiles.isInBounds(cx, cy) && values[cx][cy] < currDamage){
                         Tile other = tiles.getn(cx, cy);
                         float resultDamage = currDamage;
 
@@ -496,13 +496,13 @@ public class SectorDamage{
 
                             other.build.health -= currDamage;
                             //don't kill the core!
-                            if(other.block() instanceof CoreBlock) other.build.health = Math.max(other.build.health, 1f);
+                            if(other.getBlock() instanceof CoreBlock) other.build.health = Math.max(other.build.health, 1f);
 
                             //remove the block when destroyed
                             if(other.build.health < 0){
                                 //rubble
-                                if(rubble && !other.floor().solid && !other.floor().isLiquid && Mathf.chance(0.4)){
-                                    Effect.rubble(other.build.x, other.build.y, other.block().size);
+                                if(rubble && !other.getFloor().solid && !other.getFloor().isLiquid && Mathf.chance(0.4)){
+                                    Effect.rubble(other.build.x, other.build.y, other.getBlock().size);
                                 }
 
                                 other.build.addPlan(false);
@@ -528,8 +528,8 @@ public class SectorDamage{
 
     static float cost(Tile tile){
         return 1f +
-            (tile.block().isStatic() && tile.solid() ? 200f : 0f) +
+            (tile.getBlock().isStatic() && tile.solid() ? 200f : 0f) +
             (tile.build != null ? tile.build.health / (tile.build.block.size * tile.build.block.size) / 20f : 0f) +
-            (tile.floor().isLiquid ? 10f : 0f);
+            (tile.getFloor().isLiquid ? 10f : 0f);
     }
 }

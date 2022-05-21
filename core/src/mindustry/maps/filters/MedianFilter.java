@@ -42,8 +42,8 @@ public class MedianFilter extends GenerateFilter{
                 if(Mathf.dst2(x, y) > rad*rad) continue;
 
                 Tile tile = in.tile(in.x + x, in.y + y);
-                blocks.add(tile.block().id);
-                floors.add(tile.floor().id);
+                blocks.add(tile.getBlock().id);
+                floors.add(tile.getFloor().id);
             }
         }
 

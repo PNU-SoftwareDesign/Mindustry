@@ -60,15 +60,15 @@ public abstract class PlanetGenerator extends BasicGenerator implements HexMeshe
                 continue;
             }
 
-            Liquid liquid = tile.floor().liquidDrop;
-            if(tile.floor().itemDrop != null) content.add(tile.floor().itemDrop);
-            if(tile.overlay().itemDrop != null) content.add(tile.overlay().itemDrop);
+            Liquid liquid = tile.getFloor().liquidDrop;
+            if(tile.getFloor().itemDrop != null) content.add(tile.getFloor().itemDrop);
+            if(tile.getOverlay().itemDrop != null) content.add(tile.getOverlay().itemDrop);
             if(liquid != null) content.add(liquid);
 
-            if(!tile.block().isStatic()){
-                floorc.increment(tile.floor());
-                if(tile.overlay() != Blocks.air){
-                    floorc.increment(tile.overlay());
+            if(!tile.getBlock().isStatic()){
+                floorc.increment(tile.getFloor());
+                if(tile.getOverlay() != Blocks.air){
+                    floorc.increment(tile.getOverlay());
                 }
             }
         }
@@ -139,7 +139,7 @@ public abstract class PlanetGenerator extends BasicGenerator implements HexMeshe
             Vec3 position = sector.rect.project(x / (float)tiles.width, y / (float)tiles.height);
 
             genTile(position, gen);
-            tiles.set(x, y, new Tile(x, y, gen.floor, gen.overlay, gen.block));
+            tiles.setPos(x, y, new Tile(x, y, gen.floor, gen.overlay, gen.block));
         });
 
         generate(tiles);

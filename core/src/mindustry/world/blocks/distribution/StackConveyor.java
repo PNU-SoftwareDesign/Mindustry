@@ -129,7 +129,7 @@ public class StackConveyor extends Block implements Autotiler{
             int fromRot = from.build == null ? rotation : from.build.rotation;
 
             //offset
-            Tmp.v1.set(from.worldx(), from.worldy());
+            Tmp.v1.set(from.getWorldX(), from.getWorldY());
             Tmp.v2.set(x, y);
             Tmp.v1.interpolate(Tmp.v2, 1f - cooldown, Interp.linear);
 

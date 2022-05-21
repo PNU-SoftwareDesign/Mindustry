@@ -437,11 +437,11 @@ public class Schematics implements Loadable{
             if(check && !(st.block instanceof CoreBlock)){
                 seq.clear();
                 tile.getLinkedTilesAs(st.block, seq);
-                if(seq.contains(t -> !t.block().alwaysReplace && !t.synthetic())){
+                if(seq.contains(t -> !t.getBlock().alwaysReplace && !t.synthetic())){
                     return;
                 }
                 for(var t : seq){
-                    if(t.block() != Blocks.air){
+                    if(t.getBlock() != Blocks.air){
                         t.remove();
                     }
                 }

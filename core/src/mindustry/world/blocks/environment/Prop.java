@@ -20,7 +20,7 @@ public class Prop extends Block{
 
     @Override
     public void drawBase(Tile tile){
-        Draw.rect(variants > 0 ? variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))] : region, tile.worldx(), tile.worldy());
+        Draw.rect(variants > 0 ? variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, variantRegions.length - 1))] : region, tile.getWorldX(), tile.getWorldY());
     }
 
     @Override

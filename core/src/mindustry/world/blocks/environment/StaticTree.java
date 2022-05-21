@@ -22,7 +22,7 @@ public class StaticTree extends StaticWall{
         float oy = 0;
 
         for(int i = 0; i < 4; i++){
-            if(tile.nearby(i) != null && tile.nearby(i).block() instanceof StaticWall){
+            if(tile.nearby(i) != null && tile.nearby(i).getBlock() instanceof StaticWall){
 
                 if(i == 0){
                     r.setWidth(r.width - crop);
@@ -39,6 +39,6 @@ public class StaticTree extends StaticWall{
                 }
             }
         }
-        Draw.rect(r, tile.drawx() + ox * Draw.scl, tile.drawy() + oy * Draw.scl);
+        Draw.rect(r, tile.getDrawX() + ox * Draw.scl, tile.getDrawY() + oy * Draw.scl);
     }
 }

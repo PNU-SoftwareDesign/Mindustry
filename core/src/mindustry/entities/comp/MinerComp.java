@@ -36,7 +36,7 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
     }
 
     public boolean validMine(Tile tile, boolean checkDst){
-        return !(tile == null || tile.block() != Blocks.air || (!within(tile.worldx(), tile.worldy(), type.miningRange) && checkDst)
+        return !(tile == null || tile.getBlock() != Blocks.air || (!within(tile.getWorldX(), tile.getWorldY(), type.miningRange) && checkDst)
         || tile.drop() == null || !canMine(tile.drop()));
     }
 
@@ -56,8 +56,8 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
             int accepted = core.acceptStack(item(), stack().amount, this);
             if(accepted > 0){
                 Call.transferItemTo(self(), item(), accepted,
-                mineTile.worldx() + Mathf.range(tilesize / 2f),
-                mineTile.worldy() + Mathf.range(tilesize / 2f), core);
+                mineTile.getWorldX() + Mathf.range(tilesize / 2f),
+                mineTile.getWorldY() + Mathf.range(tilesize / 2f), core);
                 clearItem();
             }
         }
@@ -70,7 +70,7 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
             mineTimer += Time.delta *type.mineSpeed;
 
             if(Mathf.chance(0.06 * Time.delta)){
-                Fx.pulverizeSmall.at(mineTile.worldx() + Mathf.range(tilesize / 2f), mineTile.worldy() + Mathf.range(tilesize / 2f), 0f, item.color);
+                Fx.pulverizeSmall.at(mineTile.getWorldX() + Mathf.range(tilesize / 2f), mineTile.getWorldY() + Mathf.range(tilesize / 2f), 0f, item.color);
             }
 
             if(mineTimer >= 50f + item.hardness*15f){
@@ -82,13 +82,13 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
                     //add item to inventory before it is transferred
                     if(item() == item && !net.client()) addItem(item);
                     Call.transferItemTo(self(), item, 1,
-                    mineTile.worldx() + Mathf.range(tilesize / 2f),
-                    mineTile.worldy() + Mathf.range(tilesize / 2f), core);
+                    mineTile.getWorldX() + Mathf.range(tilesize / 2f),
+                    mineTile.getWorldY() + Mathf.range(tilesize / 2f), core);
                 }else if(acceptsItem(item)){
                     //this is clientside, since items are synced anyway
                     InputHandler.transferItemToUnit(item,
-                    mineTile.worldx() + Mathf.range(tilesize / 2f),
-                    mineTile.worldy() + Mathf.range(tilesize / 2f),
+                    mineTile.getWorldX() + Mathf.range(tilesize / 2f),
+                    mineTile.getWorldY() + Mathf.range(tilesize / 2f),
                     this);
                 }else{
                     mineTile = null;
@@ -112,8 +112,8 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
         float px = x + Angles.trnsx(rotation, focusLen);
         float py = y + Angles.trnsy(rotation, focusLen);
 
-        float ex = mineTile.worldx() + Mathf.sin(Time.time + 48, swingScl, swingMag);
-        float ey = mineTile.worldy() + Mathf.sin(Time.time + 48, swingScl + 2f, swingMag);
+        float ex = mineTile.getWorldX() + Mathf.sin(Time.time + 48, swingScl, swingMag);
+        float ey = mineTile.getWorldY() + Mathf.sin(Time.time + 48, swingScl + 2f, swingMag);
 
         Draw.z(Layer.flyingUnit + 0.1f);
 
@@ -123,7 +123,7 @@ abstract class MinerComp implements Itemsc, Posc, Teamc, Rotc, Drawc{
 
         if(isLocal()){
             Lines.stroke(1f, Pal.accent);
-            Lines.poly(mineTile.worldx(), mineTile.worldy(), 4, tilesize / 2f * Mathf.sqrt2, Time.time);
+            Lines.poly(mineTile.getWorldX(), mineTile.getWorldY(), 4, tilesize / 2f * Mathf.sqrt2, Time.time);
         }
 
         Draw.color();

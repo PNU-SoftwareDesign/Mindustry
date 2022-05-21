@@ -289,8 +289,8 @@ public class LExecutor{
                     if(res != null && (!build || res.build != null)){
                         cache.found = true;
                         //set result if found
-                        exec.setnum(outX, cache.x = World.conv(build ? res.build.x : res.worldx()));
-                        exec.setnum(outY, cache.y = World.conv(build ? res.build.y : res.worldy()));
+                        exec.setnum(outX, cache.x = World.conv(build ? res.build.x : res.getWorldX()));
+                        exec.setnum(outY, cache.y = World.conv(build ? res.build.y : res.getWorldY()));
                         exec.setnum(outFound, 1);
                     }else{
                         cache.found = false;
@@ -472,7 +472,7 @@ public class LExecutor{
                             unit.clearBuilding();
                             Tile tile = ai.plan.tile();
 
-                            if(tile != null && !(tile.block() == block && tile.build != null && tile.build.rotation == rot)){
+                            if(tile != null && !(tile.getBlock() == block && tile.build != null && tile.build.rotation == rot)){
                                 unit.updateBuilding = true;
                                 unit.addBuild(ai.plan);
                             }
@@ -486,7 +486,7 @@ public class LExecutor{
                         }else{
                             Tile tile = world.tileWorld(x1, y1);
                             //any environmental solid block is returned as StoneWall, aka "@solid"
-                            Block block = tile == null ? null : !tile.synthetic() ? (tile.solid() ? Blocks.stoneWall : Blocks.air) : tile.block();
+                            Block block = tile == null ? null : !tile.synthetic() ? (tile.solid() ? Blocks.stoneWall : Blocks.air) : tile.getBlock();
                             exec.setobj(p3, block);
                             exec.setobj(p4, tile != null && tile.build != null ? tile.build : null);
                         }

@@ -79,7 +79,7 @@ public class MapEditor{
 
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                tiles.set(x, y, new EditorTile(x, y, Blocks.stone.id, (short)0, (short)0));
+                tiles.setPos(x, y, new EditorTile(x, y, Blocks.stone.id, (short)0, (short)0));
             }
         }
     }
@@ -112,7 +112,7 @@ public class MapEditor{
     }
 
     public void drawBlocksReplace(int x, int y){
-        drawBlocks(x, y, tile -> tile.block() != Blocks.air || drawBlock.isFloor());
+        drawBlocks(x, y, tile -> tile.getBlock() != Blocks.air || drawBlock.isFloor());
     }
 
     public void drawBlocks(int x, int y){
@@ -138,7 +138,7 @@ public class MapEditor{
 
                 if(isFloor){
                     tile.setFloor(drawBlock.asFloor());
-                }else if(!(tile.block().isMultiblock() && !drawBlock.isMultiblock())){
+                }else if(!(tile.getBlock().isMultiblock() && !drawBlock.isMultiblock())){
                     if(drawBlock.rotate && tile.build != null && tile.build.rotation != rotation){
                         addTileOp(TileOp.get(tile.x, tile.y, (byte)OpType.rotation.ordinal(), (byte)rotation));
                     }
@@ -158,7 +158,7 @@ public class MapEditor{
     boolean hasOverlap(int x, int y){
         Tile tile = world.tile(x, y);
         //allow direct replacement of blocks of the same size
-        if(tile != null && tile.isCenter() && tile.block() != drawBlock && tile.block().size == drawBlock.size && tile.x == x && tile.y == y){
+        if(tile != null && tile.isCenter() && tile.getBlock() != drawBlock && tile.getBlock().size == drawBlock.size && tile.x == x && tile.y == y){
             return false;
         }
 
@@ -171,7 +171,7 @@ public class MapEditor{
                 int worldy = dy + offsety + y;
                 Tile other = world.tile(worldx, worldy);
 
-                if(other != null && other.block().isMultiblock()){
+                if(other != null && other.getBlock().isMultiblock()){
                     return true;
                 }
             }
@@ -182,12 +182,12 @@ public class MapEditor{
 
     public void addCliffs(){
         for(Tile tile : world.tiles){
-            if(!tile.block().isStatic() || tile.block() == Blocks.cliff) continue;
+            if(!tile.getBlock().isStatic() || tile.getBlock() == Blocks.cliff) continue;
 
             int rotation = 0;
             for(int i = 0; i < 8; i++){
                 Tile other = world.tiles.get(tile.x + Geometry.d8[i].x, tile.y + Geometry.d8[i].y);
-                if(other != null && !other.block().isStatic()){
+                if(other != null && !other.getBlock().isStatic()){
                     rotation |= (1 << i);
                 }
             }
@@ -200,7 +200,7 @@ public class MapEditor{
         }
 
         for(Tile tile : world.tiles){
-            if(tile.block() != Blocks.cliff && tile.block().isStatic()){
+            if(tile.getBlock() != Blocks.cliff && tile.getBlock().isStatic()){
                 tile.setBlock(Blocks.air);
             }
         }
@@ -208,12 +208,12 @@ public class MapEditor{
 
     public void addFloorCliffs(){
         for(Tile tile : world.tiles){
-            if(!tile.floor().hasSurface() || tile.block() == Blocks.cliff) continue;
+            if(!tile.getFloor().hasSurface() || tile.getBlock() == Blocks.cliff) continue;
 
             int rotation = 0;
             for(int i = 0; i < 8; i++){
                 Tile other = world.tiles.get(tile.x + Geometry.d8[i].x, tile.y + Geometry.d8[i].y);
-                if(other != null && !other.floor().hasSurface()){
+                if(other != null && !other.getFloor().hasSurface()){
                     rotation |= (1 << i);
                 }
             }
@@ -269,20 +269,20 @@ public class MapEditor{
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
                 int px = offsetX + x, py = offsetY + y;
-                if(previous.in(px, py)){
-                    tiles.set(x, y, previous.getn(px, py));
+                if(previous.isInBounds(px, py)){
+                    tiles.setPos(x, y, previous.getn(px, py));
                     Tile tile = tiles.getn(x, y);
                     tile.x = (short)x;
                     tile.y = (short)y;
 
                     if(tile.build != null && tile.isCenter()){
-                        tile.build.x = x * tilesize + tile.block().offset;
-                        tile.build.y = y * tilesize + tile.block().offset;
+                        tile.build.x = x * tilesize + tile.getBlock().offset;
+                        tile.build.y = y * tilesize + tile.getBlock().offset;
 
                         //shift links to account for map resize
                         Object config = tile.build.config();
                         if(config != null){
-                            Object out = BuildPlan.pointConfig(tile.block(), config, p -> p.sub(offsetX, offsetY));
+                            Object out = BuildPlan.pointConfig(tile.getBlock(), config, p -> p.sub(offsetX, offsetY));
                             if(out != config){
                                 tile.build.configureAny(out);
                             }
@@ -290,7 +290,7 @@ public class MapEditor{
                     }
 
                 }else{
-                    tiles.set(x, y, new EditorTile(x, y, Blocks.stone.id, (short)0, (short)0));
+                    tiles.setPos(x, y, new EditorTile(x, y, Blocks.stone.id, (short)0, (short)0));
                 }
             }
         }
@@ -341,7 +341,7 @@ public class MapEditor{
     class Context implements WorldContext{
         @Override
         public Tile tile(int index){
-            return world.tiles.geti(index);
+            return world.tiles.getIndex(index);
         }
 
         @Override
@@ -352,7 +352,7 @@ public class MapEditor{
         @Override
         public Tile create(int x, int y, int floorID, int overlayID, int wallID){
             Tile tile = new EditorTile(x, y, floorID, overlayID, wallID);
-            tiles().set(x, y, tile);
+            tiles().setPos(x, y, tile);
             return tile;
         }
 

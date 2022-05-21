@@ -140,7 +140,7 @@ public class Drill extends Block{
 
             if(drawMineItem){
                 Draw.color(returnItem.color);
-                Draw.rect(itemRegion, tile.worldx() + offset, tile.worldy() + offset);
+                Draw.rect(itemRegion, tile.getWorldX() + offset, tile.getWorldY() + offset);
                 Draw.color();
             }
         }else{
@@ -203,7 +203,7 @@ public class Drill extends Block{
     }
 
     public boolean canMine(Tile tile){
-        if(tile == null || tile.block().isStatic()) return false;
+        if(tile == null || tile.getBlock().isStatic()) return false;
         Item drops = tile.drop();
         return drops != null && drops.hardness <= tier;
     }

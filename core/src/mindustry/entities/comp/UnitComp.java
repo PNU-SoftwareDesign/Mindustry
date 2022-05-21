@@ -396,8 +396,8 @@ abstract class UnitComp implements Healthc, Physicsc, Hitboxc, Statusc, Teamc, I
         if(team != state.rules.waveTeam && state.hasSpawns() && (!net.client() || isLocal())){
             float relativeSize = state.rules.dropZoneRadius + hitSize/2f + 1f;
             for(Tile spawn : spawner.getSpawns()){
-                if(within(spawn.worldx(), spawn.worldy(), relativeSize)){
-                    velAddNet(Tmp.v1.set(this).sub(spawn.worldx(), spawn.worldy()).setLength(0.1f + 1f - dst(spawn) / relativeSize).scl(0.45f * Time.delta));
+                if(within(spawn.getWorldX(), spawn.getWorldY(), relativeSize)){
+                    velAddNet(Tmp.v1.set(this).sub(spawn.getWorldX(), spawn.getWorldY()).setLength(0.1f + 1f - dst(spawn) / relativeSize).scl(0.45f * Time.delta));
                 }
             }
         }

@@ -130,12 +130,12 @@ public class EntityCollisions{
 
     public static boolean legsSolid(int x, int y){
         Tile tile = world.tile(x, y);
-        return tile == null || tile.staticDarkness() >= 2 || (tile.floor().solid && tile.block() == Blocks.air);
+        return tile == null || tile.staticDarkness() >= 2 || (tile.getFloor().solid && tile.getBlock() == Blocks.air);
     }
 
     public static boolean waterSolid(int x, int y){
         Tile tile = world.tile(x, y);
-        return tile == null || tile.solid() || !tile.floor().isLiquid;
+        return tile == null || tile.solid() || !tile.getFloor().isLiquid;
     }
 
     public static boolean solid(int x, int y){
