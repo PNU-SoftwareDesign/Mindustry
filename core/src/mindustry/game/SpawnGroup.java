@@ -125,9 +125,9 @@ public class SpawnGroup implements JsonSerializable, Cloneable{
 
     @Override
     public void read(Json json, JsonValue data){
-        String tname = data.getString("type", "dagger");
+        String teamName = data.getString("type", "dagger");
 
-        type = content.getByName(ContentType.unit, LegacyIO.unitMap.get(tname, tname));
+        type = content.getByName(ContentType.unit, LegacyIO.unitMap.get(teamName, teamName));
         if(type == null) type = UnitTypes.dagger;
         begin = data.getInt("begin", 0);
         end = data.getInt("end", never);
