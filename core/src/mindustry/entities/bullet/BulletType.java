@@ -267,7 +267,11 @@ public class BulletType extends Content implements Cloneable{
             for(int i = 0; i < fragBullets; i++){
                 float len = Mathf.random(1f, 7f);
                 float a = b.rotation() + Mathf.range(fragCone/2) + fragAngle;
-                fragBullet.create(b, x + Angles.trnsx(a, len), y + Angles.trnsy(a, len), a, Mathf.random(fragVelocityMin, fragVelocityMax), Mathf.random(fragLifeMin, fragLifeMax));
+                new BulletBuilder(this, x + Angles.trnsx(a, len), y + Angles.trnsy(a, len), a)
+                .parent(b)
+                .velocityScale(Mathf.random(fragVelocityMin, fragVelocityMax))
+                .lifetimeScale(Mathf.random(fragLifeMin, fragLifeMax));
+//                fragBullet.create(b, x + Angles.trnsx(a, len), y + Angles.trnsy(a, len), a, Mathf.random(fragVelocityMin, fragVelocityMax), Mathf.random(fragLifeMin, fragLifeMax));
             }
         }
 
@@ -436,59 +440,94 @@ public class BulletType extends Content implements Cloneable{
         return ContentType.bullet;
     }
 
-    public Bullet create(Teamc owner, float x, float y, float angle){
-        return create(owner, owner.team(), x, y, angle);
-    }
+    public static class BulletBuilder{
+        private float x;
+        private float y;
+        private float angle;
 
-    public Bullet create(Entityc owner, Team team, float x, float y, float angle){
-        return create(owner, team, x, y, angle, 1f);
-    }
+        private Entityc owner;
+        private Team team;
+        private float damage = -1f;
+        private float velocityScale = 1f;
+        private float lifetimeScale = 1f;
+        private Object data = null;
+        private BulletType type;
 
-    public Bullet create(Entityc owner, Team team, float x, float y, float angle, float velocityScl){
-        return create(owner, team, x, y, angle, -1, velocityScl, 1f, null);
-    }
-
-    public Bullet create(Entityc owner, Team team, float x, float y, float angle, float velocityScl, float lifetimeScl){
-        return create(owner, team, x, y, angle, -1, velocityScl, lifetimeScl, null);
-    }
-
-    public Bullet create(Bullet parent, float x, float y, float angle){
-        return create(parent.owner, parent.team, x, y, angle);
-    }
-
-    public Bullet create(Bullet parent, float x, float y, float angle, float velocityScl, float lifeScale){
-        return create(parent.owner, parent.team, x, y, angle, velocityScl, lifeScale);
-    }
-
-    public Bullet create(Bullet parent, float x, float y, float angle, float velocityScl){
-        return create(parent.owner(), parent.team, x, y, angle, velocityScl);
-    }
-
-    public Bullet create(@Nullable Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data){
-        Bullet bullet = Bullet.create();
-        bullet.type = this;
-        bullet.owner = owner;
-        bullet.team = team;
-        bullet.time = 0f;
-        bullet.initVel(angle, speed * velocityScl);
-        if(backMove){
-            bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
-        }else{
-            bullet.set(x, y);
+        public BulletBuilder(BulletType type, float x, float y, float angle) {
+            this.type = type;
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
         }
-        bullet.lifetime = lifetime * lifetimeScl;
-        bullet.data = data;
-        bullet.drag = drag;
-        bullet.hitSize = hitSize;
-        bullet.damage = (damage < 0 ? this.damage : damage) * bullet.damageMultiplier();
-        //reset trail
-        if(bullet.trail != null){
-            bullet.trail.clear();
-        }
-        bullet.add();
 
-        if(keepVelocity && owner instanceof Velc v) bullet.vel.add(v.vel());
-        return bullet;
+        public BulletBuilder owner(Entityc owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public BulletBuilder team(Team team) {
+            this.team = team;
+            return this;
+        }
+
+        public BulletBuilder teamc(Teamc teamc) {
+            owner(teamc);
+            team(teamc.team());
+            return this;
+        }
+
+        public BulletBuilder parent(Bullet parent) {
+            owner(parent.owner);
+            team(parent.team);
+            return this;
+        }
+
+        public BulletBuilder damage(float damage) {
+            this.damage = damage;
+            return this;
+        }
+
+        public BulletBuilder velocityScale(float velocityScale) {
+            this.velocityScale = velocityScale;
+            return this;
+        }
+
+        public BulletBuilder lifetimeScale(float lifetimeScale) {
+            this.lifetimeScale = lifetimeScale;
+            return this;
+        }
+
+        public BulletBuilder data(Object data) {
+            this.data = data;
+            return this;
+        }
+
+        public Bullet build() {
+            Bullet bullet = Bullet.create();
+            bullet.type = type;
+            bullet.owner = owner;
+            bullet.team = team;
+            bullet.time = 0f;
+            bullet.initVel(angle, type.speed * velocityScale);
+            if(type.backMove){
+                bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
+            }else{
+                bullet.set(x, y);
+            }
+            bullet.lifetime = type.lifetime * lifetimeScale;
+            bullet.data = data;
+            bullet.drag = type.drag;
+            bullet.hitSize = type.hitSize;
+            bullet.damage = (damage < 0 ? this.damage : damage) * bullet.damageMultiplier();
+            //reset trail
+            if(bullet.trail != null){
+                bullet.trail.clear();
+            }
+            bullet.add();
+
+            if(type.keepVelocity && owner instanceof Velc v) bullet.vel.add(v.vel());
+            return bullet;
+        }
     }
 
     public void createNet(Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl){
@@ -498,6 +537,13 @@ public class BulletType extends Content implements Cloneable{
     @Remote(called = Loc.server, unreliable = true)
     public static void createBullet(BulletType type, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl){
         if(type == null) return;
-        type.create(null, team, x, y, angle, damage, velocityScl, lifetimeScl, null);
+        new BulletBuilder(type, x, y, angle)
+        .owner(null)
+        .team(team)
+        .damage(damage)
+        .velocityScale(velocityScl)
+        .lifetimeScale(lifetimeScl)
+        .data(null)
+        .build();
     }
 }

@@ -9,6 +9,7 @@ import arc.util.*;
 import mindustry.content.*;
 import mindustry.entities.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.gen.*;
 
 public class MoveLightningAbility extends Ability{
@@ -78,7 +79,10 @@ public class MoveLightningAbility extends Ability{
             }
 
             if(bullet != null){
-                bullet.create(unit, unit.team, x, y, unit.rotation + bulletAngle + Mathf.range(bulletSpread));
+                new BulletBuilder(bullet, x, y, unit.rotation + bulletAngle + Mathf.range(bulletSpread))
+                .owner(unit)
+                .team(unit.team)
+                .build();
             }
 
             if(alternate) side *= -1f;

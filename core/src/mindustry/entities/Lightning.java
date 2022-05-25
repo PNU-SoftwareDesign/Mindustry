@@ -8,6 +8,7 @@ import arc.util.*;
 import mindustry.content.*;
 import mindustry.core.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.world.*;
@@ -43,7 +44,14 @@ public class Lightning{
         bhit = false;
 
         for(int i = 0; i < length / 2; i++){
-            hitCreate.create(null, team, x, y, rotation, damage, 1f, 1f, hitter);
+            new BulletBuilder(hitCreate, x, y, rotation)
+                .owner(null)
+                .damage(damage)
+                .velocityScale(1f)
+                .lifetimeScale(1f)
+                .data(hitter)
+                .build();
+            //hitCreate.create(null, team, x, y, rotation, damage, 1f, 1f, hitter);
             lines.add(new Vec2(x + Mathf.range(3f), y + Mathf.range(3f)));
 
             if(lines.size > 1){
