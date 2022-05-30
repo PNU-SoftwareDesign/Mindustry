@@ -32,13 +32,32 @@ class ItemSeqTest{
         itemSeq.add(new ItemStack(Items.surgeAlloy, -9));
     }
 
+    /**
+     * Purpose: checkNegative And replace to zero
+     * Input: checkNegative anyNegativeValue
+     * Expected: return SUCCESS
+     * anyNegativeValue -> zero
+     */
     @Test
-    void testCheckNegative() {
+    void checkNegativeTest() {
         insertNegative();
 
         itemSeq.checkNegative();
         itemSeq.forEach((itemStack) -> {
             Assertions.assertTrue(itemStack.amount >= 0);
         });
+    }
+
+    /**
+     * Purpose: make copied ItemSeq instance
+     * Input: none
+     * Expected: return SUCCESS
+     */
+    @Test
+    void copyTest() {
+        insertNegative();
+
+        ItemSeq copiedItemSeq = itemSeq.copy();
+        Assertions.assertArrayEquals(copiedItemSeq.toArray(), itemSeq.toArray());
     }
 }
