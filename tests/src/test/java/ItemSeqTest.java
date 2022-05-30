@@ -60,4 +60,18 @@ class ItemSeqTest{
         ItemSeq copiedItemSeq = itemSeq.copy();
         Assertions.assertArrayEquals(copiedItemSeq.toArray(), itemSeq.toArray());
     }
+
+    /**
+     * Purpose: make ItemSeq to Array of ItemStack
+     * Input: none
+     * Expected: return SUCCESS
+     * ItemStack.length == 14
+     */
+    @Test
+    void toArrayTest() {
+        insertNegative();
+
+        ItemStack[] itemStacks = itemSeq.toArray();
+        Assertions.assertEquals(itemStacks.length, 14);
+    }
 }
