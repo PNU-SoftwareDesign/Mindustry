@@ -43,4 +43,23 @@ class LiquidTest{
         Assertions.assertNotNull(oil.stats.toMap().get(Stat.heatCapacity.category).getNull(Stat.heatCapacity));
         Assertions.assertNotNull(oil.stats.toMap().get(Stat.viscosity.category).getNull(Stat.viscosity));
     }
+
+    /**
+     * Purpose: check Liquid can extinguish fire
+     * Input: (flammability, temperature)
+     * Expected: return SUCCESS
+     * (0.1f, 0.5f) -> False
+     * (0.09999f, 0.5f) -> True
+     */
+    @Test
+    void canExtinguishTest() {
+        Liquid testLiquid = new Liquid("testLiquid");
+        testLiquid.flammability = 0.1f;
+        testLiquid.temperature = 0.5f;
+        Assertions.assertFalse(testLiquid.canExtinguish());
+
+        testLiquid.flammability = 0.09999f;
+        testLiquid.temperature = 0.5f;
+        Assertions.assertTrue(testLiquid.canExtinguish());
+    }
 }
