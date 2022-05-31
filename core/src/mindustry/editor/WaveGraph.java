@@ -18,18 +18,24 @@ import mindustry.ui.*;
 public class WaveGraph extends Table{
     public Seq<SpawnGroup> groups = new Seq<>();
     public int from = 0, to = 20;
-
-    private Mode mode = Mode.counts;
     private int[][] values;
     private OrderedSet<UnitType> used = new OrderedSet<>();
-    private int max, maxTotal;
-    private float maxHealth;
     private Table colors;
     private ObjectSet<UnitType> hidden = new ObjectSet<>();
 
-    public WaveGraph(){
-        background(Tex.pane);
+    private ObjectSet<GraphMode> gModes = new ObjectSet<>();
+    private GraphMode cMode;
 
+
+    public WaveGraph(){
+
+        gModes.add(new Counts("counts"));
+        gModes.add(new Totals("totals"));
+        gModes.add(new Health("health"));
+
+        cMode = gModes.first();
+
+        background(Tex.pane);
         rect((x, y, width, height) -> {
             Lines.stroke(Scl.scl(3f));
 
@@ -38,64 +44,15 @@ public class WaveGraph extends Table{
 
             lay.setText(font, "1");
 
-            int maxY = switch(mode){
-                case counts -> nextStep(max);
-                case health -> nextStep((int)maxHealth);
-                case totals -> nextStep(maxTotal);
-            };
+            int maxY = cMode.getMaxY();
 
-            float fh = lay.height;
-            float offsetX = Scl.scl(lay.width * (maxY + "").length() * 2), offsetY = Scl.scl(22f) + fh + Scl.scl(5f);
+            float offsetX = Scl.scl(lay.width * (maxY + "").length() * 2);
+            float offsetY = Scl.scl(22f) + lay.height + Scl.scl(5f);
 
             float graphX = x + offsetX, graphY = y + offsetY, graphW = width - offsetX, graphH = height - offsetY;
             float spacing = graphW / (values.length - 1);
 
-            if(mode == Mode.counts){
-                for(UnitType type : used.orderedItems()){
-                    Draw.color(color(type));
-                    Draw.alpha(parentAlpha);
-
-                    Lines.beginLine();
-
-                    for(int i = 0; i < values.length; i++){
-                        int val = values[i][type.id];
-                        float cx = graphX + i * spacing, cy = graphY + val * graphH / maxY;
-                        Lines.linePoint(cx, cy);
-                    }
-
-                    Lines.endLine();
-                }
-            }else if(mode == Mode.totals){
-                Lines.beginLine();
-
-                Draw.color(Pal.accent);
-                for(int i = 0; i < values.length; i++){
-                    int sum = 0;
-                    for(UnitType type : used.orderedItems()){
-                        sum += values[i][type.id];
-                    }
-
-                    float cx = graphX + i * spacing, cy = graphY + sum * graphH / maxY;
-                    Lines.linePoint(cx, cy);
-                }
-
-                Lines.endLine();
-            }else if(mode == Mode.health){
-                Lines.beginLine();
-
-                Draw.color(Pal.health);
-                for(int i = 0; i < values.length; i++){
-                    float sum = 0;
-                    for(UnitType type : used.orderedItems()){
-                        sum += (type.health) * values[i][type.id];
-                    }
-
-                    float cx = graphX + i * spacing, cy = graphY + sum * graphH / maxY;
-                    Lines.linePoint(cx, cy);
-                }
-
-                Lines.endLine();
-            }
+            cMode.drawLine(graphX, graphY, graphH, spacing);
 
             //how many numbers can fit here
             float totalMarks = Mathf.clamp(maxY, 1, 10);
@@ -106,7 +63,8 @@ public class WaveGraph extends Table{
             Draw.alpha(0.1f);
 
             for(int i = 0; i < maxY; i += markSpace){
-                float cy = graphY + i * graphH / maxY, cx = graphX;
+                float cx = graphX;
+                float cy = graphY + i * graphH / maxY;
 
                 Lines.line(cx, cy, cx + graphW, cy);
 
@@ -120,7 +78,8 @@ public class WaveGraph extends Table{
             font.setColor(Color.lightGray);
 
             for(int i = 0; i < values.length; i++){
-                float cy = y + fh, cx = graphX + graphW / (values.length - 1) * i;
+                float cx = graphX + graphW / (values.length - 1) * i;
+                float cy = y + lay.height;
 
                 Lines.line(cx, cy, cx, cy + len);
                 if(i == values.length / 2){
@@ -144,10 +103,10 @@ public class WaveGraph extends Table{
             t.left();
             ButtonGroup<Button> group = new ButtonGroup<>();
 
-            for(Mode m : Mode.all){
-                t.button("@wavemode." + m.name(), Styles.fullTogglet, () -> {
-                    mode = m;
-                }).group(group).height(35f).update(b -> b.setChecked(m == mode)).width(130f);
+            for(GraphMode mode : gModes){
+                t.button("@wavemode." + mode.getName(), Styles.fullTogglet, () -> {
+                    cMode = mode;
+                }).group(group).height(35f).update(b -> b.setChecked(mode.getName().equals(cMode.getName()))).width(130f);
             }
         }).growX();
     }
@@ -155,27 +114,17 @@ public class WaveGraph extends Table{
     public void rebuild(){
         values = new int[to - from + 1][Vars.content.units().size];
         used.clear();
-        max = maxTotal = 1;
-        maxHealth = 1f;
 
         for(int i = from; i <= to; i++){
-            int index = i - from;
-            float healthsum = 0f;
-            int sum = 0;
-
             for(SpawnGroup spawn : groups){
                 int spawned = spawn.getSpawned(i);
-                values[index][spawn.type.id] += spawned;
+                values[i - from][spawn.type.id] += spawned;
                 if(spawned > 0){
                     used.add(spawn.type);
                 }
-                max = Math.max(max, values[index][spawn.type.id]);
-                healthsum += spawned * (spawn.type.health);
-                sum += spawned;
             }
-            maxTotal = Math.max(maxTotal, sum);
-            maxHealth = Math.max(maxHealth, healthsum);
         }
+        gModes.each(GraphMode::setMax);
 
         ObjectSet<UnitType> usedCopy = new ObjectSet<>(used);
 
@@ -238,9 +187,118 @@ public class WaveGraph extends Table{
         return order;
     }
 
-    enum Mode{
-        counts, totals, health;
+    public abstract class GraphMode{
+        protected float max = 1f;
+        private final String name;
+        public GraphMode(String name)  { this.name = name; }
+        abstract public void drawLine(float graphX, float graphY, float graphH, float spacing);
+        public int getMaxY() { return nextStep((int)max); }
+        public String getName() { return name; }
 
-        static Mode[] all = values();
+        final public void setMax(){
+            max = 1f;
+            for(int i = from; i <= to; i++){
+                max = Math.max(sumSpawnedValue(i), max);
+            }
+        }
+        abstract protected float sumSpawnedValue(int index);
+    }
+
+    public class Counts extends GraphMode{
+        public Counts(String name){
+            super(name);
+        }
+        @Override
+        public void drawLine(float graphX, float graphY, float graphH, float spacing){
+            int maxY = getMaxY();
+
+            for(UnitType type : used.orderedItems()){
+                Lines.beginLine();
+
+                Draw.color(color(type));
+                Draw.alpha(parentAlpha);
+
+                for(int i = 0; i < values.length; i++){
+                    float cx = graphX + i * spacing;
+                    float cy = graphY + values[i][type.id] * graphH / maxY;
+                    Lines.linePoint(cx, cy);
+                }
+
+                Lines.endLine();
+            }
+        }
+        @Override
+        protected float sumSpawnedValue(int index){
+            for(SpawnGroup spawn : groups){
+                max = Math.max((int)max, values[index - from][spawn.type.id]);
+            }
+            return max;
+        }
+    }
+    public class Totals extends GraphMode{
+        public Totals(String name){
+            super(name);
+        }
+        @Override
+        public void drawLine(float graphX, float graphY, float graphH, float spacing){
+            int maxY = getMaxY();
+            Lines.beginLine();
+
+            Draw.color(Pal.accent);
+            for(int i = 0; i < values.length; i++){
+                int sum = 0;
+                for(UnitType type : used.orderedItems()){
+                    sum += values[i][type.id];
+                }
+
+                float cx = graphX + i * spacing;
+                float cy = graphY + sum * graphH / maxY;
+                Lines.linePoint(cx, cy);
+            }
+
+            Lines.endLine();
+        }
+
+        @Override
+        public float sumSpawnedValue(int index){
+            int sum = 0;
+            for(SpawnGroup spawn : groups){
+                sum += spawn.getSpawned(index);
+            }
+            return (float)sum;
+        }
+    }
+
+    public class Health extends GraphMode{
+        public Health(String name){
+            super(name);
+        }
+        @Override
+        public void drawLine(float graphX, float graphY, float graphH, float spacing){
+            int maxY = getMaxY();
+            Lines.beginLine();
+
+            Draw.color(Pal.health);
+            for(int i = 0; i < values.length; i++){
+                float sum = 0;
+                for(UnitType type : used.orderedItems()){
+                    sum += (type.health) * values[i][type.id];
+                }
+
+                float cx = graphX + i * spacing, cy = graphY + sum * graphH / maxY;
+                Lines.linePoint(cx, cy);
+            }
+
+            Lines.endLine();
+        }
+
+        @Override
+        public float sumSpawnedValue(int index){
+            float healthSum = 0f;
+            for(SpawnGroup spawn : groups){
+                healthSum += spawn.getSpawned(index) * (spawn.type.health);
+            }
+            return healthSum;
+        }
     }
 }
