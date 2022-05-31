@@ -1,15 +1,30 @@
 package mindustry.world.blocks.logic;
 
 import arc.util.io.*;
+import mindustry.content.Items;
 import mindustry.gen.*;
+import mindustry.type.Category;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
+import static mindustry.type.ItemStack.with;
+
 public class MemoryBlock extends Block{
+    public static final String memoryCell = "memory-cell";
+    public static final String memoryBank = "memory-bank";
     public int memoryCapacity = 32;
 
     public MemoryBlock(String name){
         super(name);
+        if(name == memoryCell) {
+            requirements(Category.logic, with(Items.graphite, 30, Items.silicon, 30));
+            memoryCapacity = 64;
+        }
+        if(name == memoryBank) {
+            requirements(Category.logic, with(Items.graphite, 80, Items.silicon, 80, Items.phaseFabric, 30));
+            memoryCapacity = 512;
+            size = 2;
+        }
         destructible = true;
         solid = true;
         group = BlockGroup.logic;

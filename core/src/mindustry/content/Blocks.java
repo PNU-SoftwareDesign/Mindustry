@@ -2218,13 +2218,9 @@ public class Blocks implements ContentList{
         //endregion campaign
         //region logic
 
-        message = new MessageBlock("message"){{
-            requirements(Category.logic, with(Items.graphite, 5));
-        }};
+        message = LogicBlockFactory.generateLogicBlock("message");
 
-        switchBlock = new SwitchBlock("switch"){{
-            requirements(Category.logic, with(Items.graphite, 5));
-        }};
+        switchBlock = LogicBlockFactory.generateLogicBlock("switch");
 
         microProcessor = new LogicBlock("micro-processor"){{
             requirements(Category.logic, with(Items.copper, 90, Items.lead, 50, Items.silicon, 50));
@@ -2256,19 +2252,10 @@ public class Blocks implements ContentList{
 
             size = 3;
         }};
+        memoryCell = LogicBlockFactory.generateLogicBlock("memory-cell");
 
-        memoryCell = new MemoryBlock("memory-cell"){{
-            requirements(Category.logic, with(Items.graphite, 30, Items.silicon, 30));
+        memoryBank = LogicBlockFactory.generateLogicBlock("memory-bank");
 
-            memoryCapacity = 64;
-        }};
-
-        memoryBank = new MemoryBlock("memory-bank"){{
-            requirements(Category.logic, with(Items.graphite, 80, Items.silicon, 80, Items.phaseFabric, 30));
-
-            memoryCapacity = 512;
-            size = 2;
-        }};
 
         logicDisplay = new LogicDisplay("logic-display"){{
             requirements(Category.logic, with(Items.lead, 100, Items.silicon, 50, Items.metaglass, 50));

@@ -3,15 +3,21 @@ package mindustry.world.blocks.logic;
 import arc.graphics.g2d.*;
 import arc.util.io.*;
 import mindustry.annotations.Annotations.*;
+import mindustry.content.Items;
 import mindustry.gen.*;
+import mindustry.type.Category;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
+import static mindustry.type.ItemStack.with;
+
 public class SwitchBlock extends Block{
+    public static final String name = "switch";
     public @Load("@-on") TextureRegion onRegion;
 
     public SwitchBlock(String name){
         super(name);
+        requirements(Category.logic, with(Items.graphite, 5));
         configurable = true;
         update = true;
         drawDisabled = false;

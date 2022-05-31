@@ -10,21 +10,26 @@ import arc.scene.ui.layout.*;
 import arc.util.*;
 import arc.util.io.*;
 import arc.util.pooling.*;
+import mindustry.content.Items;
 import mindustry.gen.*;
+import mindustry.type.Category;
 import mindustry.ui.*;
 import mindustry.ui.dialogs.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
+import static mindustry.type.ItemStack.with;
 
 public class MessageBlock extends Block{
+    public static final String name = "message";
     //don't change this too much unless you want to run into issues with packet sizes
     public int maxTextLength = 220;
     public int maxNewlines = 24;
 
     public MessageBlock(String name){
         super(name);
+        requirements(Category.logic, with(Items.graphite, 5));
         configurable = true;
         solid = true;
         destructible = true;
