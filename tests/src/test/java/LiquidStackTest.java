@@ -5,6 +5,13 @@ import org.junit.jupiter.api.*;
 import java.util.*;
 
 class LiquidStackTest{
+    private final LiquidStack[] liquidStacks = new LiquidStack[]{
+        new LiquidStack(Liquids.water, 5),
+        new LiquidStack(Liquids.oil, 0),
+        new LiquidStack(Liquids.cryofluid, -5),
+        new LiquidStack(Liquids.slag, 1),
+    };
+
     @BeforeAll
     static void beforeAll() {
         ApplicationTests.launchApplication();
@@ -14,24 +21,17 @@ class LiquidStackTest{
      * Purpose: multiply LiquidStackList by amount
      * Input: LiquidStack[] stacks, float amount
      * Expected: return SUCCESS
-     * { new LiquidStack(Liquids.water, 5), new LiquidStack(Liquids.oil, 0),
-     * new LiquidStack(Liquids.cryofluid, -5),new LiquidStack(Liquids.slag, 1) } , 10 ->
-     *  { new LiquidStack(Liquids.water, 50), new LiquidStack(Liquids.oil, 0),
-     * new LiquidStack(Liquids.cryofluid, -50),new LiquidStack(Liquids.slag, 10) }
-     * { new LiquidStack(Liquids.water, 5), new LiquidStack(Liquids.oil, 0),
-     * new LiquidStack(Liquids.cryofluid, -5),new LiquidStack(Liquids.slag, 1) } , 1 ->
-     * { new LiquidStack(Liquids.water, 5), new LiquidStack(Liquids.oil, 0),
-     * new LiquidStack(Liquids.cryofluid, -5),new LiquidStack(Liquids.slag, 1) }
+     * { LiquidStack(Liquids.water, 5), LiquidStack(Liquids.oil, 0),
+     * LiquidStack(Liquids.cryofluid, -5),LiquidStack(Liquids.slag, 1) } , 10 ->
+     *  { LiquidStack(Liquids.water, 50), LiquidStack(Liquids.oil, 0),
+     * LiquidStack(Liquids.cryofluid, -50),LiquidStack(Liquids.slag, 10) }
+     * { LiquidStack(Liquids.water, 5), LiquidStack(Liquids.oil, 0),
+     * LiquidStack(Liquids.cryofluid, -5),LiquidStack(Liquids.slag, 1) } , 1 ->
+     * { LiquidStack(Liquids.water, 5), LiquidStack(Liquids.oil, 0),
+     * LiquidStack(Liquids.cryofluid, -5), LiquidStack(Liquids.slag, 1) }
      */
     @Test
     void multTest() {
-        LiquidStack[] liquidStacks = new LiquidStack[]{
-            new LiquidStack(Liquids.water, 5),
-            new LiquidStack(Liquids.oil, 0),
-            new LiquidStack(Liquids.cryofluid, -5),
-            new LiquidStack(Liquids.slag, 1),
-        };
-
         LiquidStack[] multedStacks1 = LiquidStack.mult(liquidStacks, 10);
         Assertions.assertEquals(multedStacks1.length, liquidStacks.length);
         Assertions.assertEquals(multedStacks1[0].amount, 50);
@@ -47,7 +47,30 @@ class LiquidStackTest{
         LiquidStack[] multedStacks2 = LiquidStack.mult(liquidStacks, 1);
         Assertions.assertEquals(multedStacks2.length, liquidStacks.length);
         for (int i = 0; i < liquidStacks.length; ++i) {
-            Assertions.assertTrue(liquidStacks[i].equals(multedStacks2[i]));
+            Assertions.assertEquals(multedStacks2[i], liquidStacks[i]);
+        }
+    }
+
+    /**
+     * Purpose: Convert list of object to LiquidStackList
+     * Input: Object[] items
+     * Expected: return SUCCESS
+     * {Liquids.water, 5, Liquids.oil, 0, Liquids.cryofluid, -5, Liquids.slag, 1 } ->
+     * { LiquidStack(Liquids.water, 5), LiquidStack(Liquids.oil, 0),
+     * LiquidStack(Liquids.cryofluid, -5),LiquidStack(Liquids.slag, 1) }
+     */
+    @Test
+    void withTest(){
+        Object[] items = new Object[]{
+        Liquids.water, 5,
+        Liquids.oil, 0,
+        Liquids.cryofluid, -5,
+        Liquids.slag, 1
+        };
+
+        LiquidStack[] withStack = LiquidStack.with(items);
+        for (int i = 0; i < liquidStacks.length; ++i) {
+            Assertions.assertEquals(withStack[i], liquidStacks[i]);
         }
     }
 }
