@@ -7,6 +7,7 @@ import arc.util.*;
 import mindustry.annotations.Annotations.*;
 import mindustry.entities.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.world.*;
@@ -68,7 +69,9 @@ public class ShockMine extends Block{
             }
             if(bullet != null){
                 for(int i = 0; i < shots; i++){
-                    bullet.create(this, x, y, (360f / shots) * i + Mathf.random(inaccuracy));
+                    new BulletBuilder(bullet, x, y, (360f / shots) * i + Mathf.range(inaccuracy))
+                    .owner(this)
+                    .build();
                 }
             }
         }

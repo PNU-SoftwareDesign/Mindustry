@@ -16,6 +16,7 @@ import mindustry.core.*;
 import mindustry.entities.*;
 import mindustry.entities.Units.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.game.*;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
@@ -456,7 +457,12 @@ public class Turret extends ReloadTurret{
         protected void bullet(BulletType type, float angle){
             float lifeScl = type.scaleVelocity ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range(), minRange / type.range(), range / type.range()) : 1f;
 
-            type.create(this, team, x + tr.x, y + tr.y, angle, 1f + Mathf.range(velocityInaccuracy), lifeScl);
+            new BulletBuilder(type, x + tr.x, y + tr.y, angle)
+            .owner(this)
+            .team(team)
+            .velocityScale(1f + Mathf.range(velocityInaccuracy))
+            .lifetimeScale(lifeScl)
+            .build();
         }
 
         protected void effects(){

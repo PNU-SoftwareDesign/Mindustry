@@ -13,6 +13,7 @@ import mindustry.annotations.Annotations.*;
 import mindustry.content.*;
 import mindustry.entities.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.logic.*;
@@ -291,9 +292,14 @@ public class MassDriver extends Block{
 
             float angle = tile.angleTo(target);
 
-            bullet.create(this, team,
-                x + Angles.trnsx(angle, translation), y + Angles.trnsy(angle, translation),
-                angle, -1f, bulletSpeed, bulletLifetime, data);
+            new BulletBuilder(bullet, x + Angles.trnsx(angle, translation), y + Angles.trnsy(angle, translation), angle)
+            .owner(this)
+            .team(team)
+            .damage(-1f)
+            .velocityScale(bulletSpeed)
+            .lifetimeScale(bulletLifetime)
+            .data(data)
+            .build();
 
             shootEffect.at(x + Angles.trnsx(angle, translation), y + Angles.trnsy(angle, translation), angle);
             smokeEffect.at(x + Angles.trnsx(angle, translation), y + Angles.trnsy(angle, translation), angle);

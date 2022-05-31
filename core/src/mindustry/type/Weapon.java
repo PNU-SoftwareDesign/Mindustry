@@ -14,6 +14,7 @@ import mindustry.audio.*;
 import mindustry.content.*;
 import mindustry.entities.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.bullet.BulletType.*;
 import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
@@ -375,10 +376,12 @@ public class Weapon implements Cloneable{
     protected Bullet bullet(Unit unit, float shootX, float shootY, float angle, float lifescl){
         float xr = Mathf.range(xRand);
 
-        return bullet.create(unit, unit.team,
-        shootX + Angles.trnsx(angle, 0, xr),
-        shootY + Angles.trnsy(angle, 0, xr),
-        angle, (1f - velocityRnd) + Mathf.random(velocityRnd), lifescl);
+        return new BulletBuilder(bullet, shootX + Angles.trnsx(angle, 0, xr), shootY + Angles.trnsy(angle, 0, xr), angle)
+        .owner(unit)
+        .team(unit.team)
+        .velocityScale((1f - velocityRnd) + Mathf.random(velocityRnd))
+        .lifetimeScale(lifescl)
+        .build();
     }
 
     public Weapon copy(){
