@@ -60,4 +60,75 @@ public class Item extends UnlockableContent{
     public static Seq<Item> getAllOres(){
         return content.blocks().select(b -> b instanceof OreBlock).map(b -> b.itemDrop);
     }
+
+    public static class ItemBuilder {
+        private Color color;
+        private float explosiveness = 0f;
+        private float flammability = 0f;
+        private float radioactivity;
+        private float charge = 0f;
+        private int hardness = 0;
+        private float cost = 1f;
+        private boolean lowPriority;
+        private String name;
+        private boolean alwaysUnlocked = false;
+
+        public ItemBuilder(String name, Color color) {
+            this.name = name;
+            this.color = color;
+        }
+
+        public ItemBuilder hardness(int hardness) {
+            this.hardness = hardness;
+            return this;
+        }
+
+        public ItemBuilder cost(float cost) {
+            this.cost = cost;
+            return this;
+        }
+
+        public ItemBuilder alwaysUnlocked(boolean alwaysUnlocked) {
+            this.alwaysUnlocked = alwaysUnlocked;
+            return this;
+        }
+
+        public ItemBuilder lowPriority(boolean lowPriority) {
+            this.lowPriority = lowPriority;
+            return this;
+        }
+
+        public ItemBuilder flammability(float flammability) {
+            this.flammability = flammability;
+            return this;
+        }
+
+        public ItemBuilder radioactivity(float radioactivity) {
+            this.radioactivity = radioactivity;
+            return this;
+        }
+
+        public ItemBuilder charge(float charge) {
+            this.radioactivity = radioactivity;
+            return this;
+        }
+
+        public ItemBuilder explosiveness(float explosiveness) {
+            this.explosiveness = explosiveness;
+            return this;
+        }
+
+        public Item build() {
+            Item item = new Item(this.name, this.color);
+            item.explosiveness = this.explosiveness;
+            item.flammability = this.flammability;
+            item.radioactivity = this.radioactivity;
+            item.charge = this.charge;
+            item.alwaysUnlocked = this.alwaysUnlocked;
+            item.hardness = this.hardness;
+            item.cost = this.cost;
+            item.lowPriority = this.lowPriority;
+            return item;
+        }
+    }
 }

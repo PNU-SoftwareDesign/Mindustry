@@ -16,7 +16,7 @@ import static mindustry.Vars.*;
 
 public class MapRenderer implements Disposable{
     private static final int chunkSize = 64;
-    private IndexedRenderer[][] chunks;
+    private IndexedRenderer chunk;
     private IntSet updates = new IntSet();
     private IntSet delayedUpdates = new IntSet();
     private TextureRegion clearEditor;
@@ -25,21 +25,14 @@ public class MapRenderer implements Disposable{
     public void resize(int width, int height){
         updates.clear();
         delayedUpdates.clear();
-        if(chunks != null){
-            for(int x = 0; x < chunks.length; x++){
-                for(int y = 0; y < chunks[0].length; y++){
-                    chunks[x][y].dispose();
-                }
-            }
+        if(chunk != null){
+            chunk.dispose();
         }
 
-        chunks = new IndexedRenderer[(int)Math.ceil((float)width / chunkSize)][(int)Math.ceil((float)height / chunkSize)];
+        final int numRows = (int)Math.ceil((float)height / chunkSize);
+        final int numCols = (int)Math.ceil((float)width / chunkSize);
+        chunk = new IndexedRenderer(numRows, numCols, chunkSize * chunkSize * 2);
 
-        for(int x = 0; x < chunks.length; x++){
-            for(int y = 0; y < chunks[0].length; y++){
-                chunks[x][y] = new IndexedRenderer(chunkSize * chunkSize * 2);
-            }
-        }
         this.width = width;
         this.height = height;
         updateAll();
@@ -56,24 +49,17 @@ public class MapRenderer implements Disposable{
         delayedUpdates.clear();
 
         //????
-        if(chunks == null){
+        if(chunk == null){
             return;
         }
 
         var texture = Core.atlas.find("clear-editor").texture;
 
-        for(int x = 0; x < chunks.length; x++){
-            for(int y = 0; y < chunks[0].length; y++){
-                IndexedRenderer mesh = chunks[x][y];
-
-                if(mesh == null){
-                    continue;
-                }
-
-                mesh.getTransformMatrix().setToTranslation(tx, ty).scale(tw / (width * tilesize), th / (height * tilesize));
-                mesh.setProjectionMatrix(Draw.proj());
-
-                mesh.render(texture);
+        for(int x = 0; x < chunk.getNumChunkCol(); x++){
+            for(int y = 0; y < chunk.getNumChunkRow(); y++){
+                chunk.getTransformMatrix(x, y).setToTranslation(tx, ty).scale(tw / (width * tilesize), th / (height * tilesize));
+                chunk.setProjectionMatrix(x, y, Draw.proj());
+                chunk.render(x, y, texture);
             }
         }
     }
@@ -93,7 +79,6 @@ public class MapRenderer implements Disposable{
 
     private void render(int wx, int wy){
         int x = wx / chunkSize, y = wy / chunkSize;
-        IndexedRenderer mesh = chunks[x][y];
         Tile tile = editor.tiles().getn(wx, wy);
 
         Team team = tile.team();
@@ -111,7 +96,7 @@ public class MapRenderer implements Disposable{
 
             float width = region.width * Draw.scl, height = region.height * Draw.scl;
 
-            mesh.draw(idxWall, region,
+            chunk.draw(x, y, idxWall, region,
             wx * tilesize + wall.offset + (tilesize - width) / 2f,
             wy * tilesize + wall.offset + (tilesize - height) / 2f,
             width, height,
@@ -119,13 +104,13 @@ public class MapRenderer implements Disposable{
         }else{
             region = floor.editorVariantRegions()[Mathf.randomSeed(idxWall, 0, floor.editorVariantRegions().length - 1)];
 
-            mesh.draw(idxWall, region, wx * tilesize, wy * tilesize, 8, 8);
+            chunk.draw(x, y, idxWall, region, wx * tilesize, wy * tilesize, 8, 8);
         }
 
         float offsetX = -(wall.size / 3) * tilesize, offsetY = -(wall.size / 3) * tilesize;
 
         if((wall.update || wall.destructible) && center){
-            mesh.setColor(team.color);
+            chunk.setColor(team.color);
             region = Core.atlas.find("block-border-editor");
         }else if(!wall.synthetic() && wall != Blocks.air && center){
             region = !wall.editorIcon().found() ?
@@ -134,7 +119,7 @@ public class MapRenderer implements Disposable{
                 wall.editorIcon();
 
             if(wall == Blocks.cliff){
-                mesh.setColor(Tmp.c1.set(floor.mapColor).mul(1.6f));
+                chunk.setColor(Tmp.c1.set(floor.mapColor).mul(1.6f));
                 region = ((Cliff)Blocks.cliff).editorCliffs[tile.data & 0xff];
             }
 
@@ -154,21 +139,14 @@ public class MapRenderer implements Disposable{
             height = tilesize;
         }
 
-        mesh.draw(idxDecal, region, wx * tilesize + offsetX, wy * tilesize + offsetY, width, height);
-        mesh.setColor(Color.white);
+        chunk.draw(x, y, idxDecal, region, wx * tilesize + offsetX, wy * tilesize + offsetY, width, height);
+        chunk.setColor(Color.white);
     }
 
     @Override
     public void dispose(){
-        if(chunks == null){
-            return;
-        }
-        for(int x = 0; x < chunks.length; x++){
-            for(int y = 0; y < chunks[0].length; y++){
-                if(chunks[x][y] != null){
-                    chunks[x][y].dispose();
-                }
-            }
+        if(chunk != null){
+            chunk.dispose();
         }
     }
 }

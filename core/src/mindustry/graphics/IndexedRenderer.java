@@ -34,38 +34,53 @@ public class IndexedRenderer implements Disposable{
     }
     """
     );
-    private Mesh mesh;
+    private Mesh[][] meshes;
     private float[] tmpVerts = new float[vsize * 6];
-    private float[] vertices;
 
-    private Mat projMatrix = new Mat();
-    private Mat transMatrix = new Mat();
-    private Mat combined = new Mat();
+    private Mat[][] projMatrices;
+    private Mat[][] transMatrices;
+    private Mat[][] combineds;
     private float color = Color.white.toFloatBits();
+    private final int numChunkRow;
+    private final int numChunkCol;
 
-    public IndexedRenderer(int sprites){
+    public IndexedRenderer(int numRow, int numCol, int sprites){
+        this.numChunkRow = numRow;
+        this.numChunkCol = numCol;
+
+        this.projMatrices = new Mat[this.numChunkCol][this.numChunkRow];
+        this.transMatrices = new Mat[this.numChunkCol][this.numChunkRow];
+        this.combineds = new Mat[this.numChunkCol][this.numChunkRow];
+        for(int x = 0; x < this.numChunkCol; x++){
+            for(int y = 0; y < this.numChunkRow; y++){
+                this.projMatrices[x][y] = new Mat();
+                this.transMatrices[x][y] = new Mat();
+                this.combineds[x][y] = new Mat();
+            }
+        }
+
         resize(sprites);
     }
 
-    public void render(Texture texture){
+    public void render(int col, int row, Texture texture){
         Gl.enable(Gl.blend);
 
-        updateMatrix();
+        updateMatrix(col, row);
 
         program.bind();
         texture.bind();
 
-        program.setUniformMatrix4("u_projTrans", combined);
+        program.setUniformMatrix4("u_projTrans", combineds[col][row]);
         program.setUniformi("u_texture", 0);
 
-        mesh.render(program, Gl.triangles, 0, vertices.length / vsize);
+        meshes[col][row].render(program, Gl.triangles, 0, meshes[col][row].getMaxVertices());
     }
 
     public void setColor(Color color){
         this.color = color.toFloatBits();
     }
 
-    public void draw(int index, TextureRegion region, float x, float y, float w, float h){
+    public void draw(int col, int row, int index, TextureRegion region, float x, float y, float w, float h){
         float fx2 = x + w;
         float fy2 = y + h;
         float u = region.u;
@@ -114,10 +129,10 @@ public class IndexedRenderer implements Disposable{
         vertices[idx++] = u;
         vertices[idx++] = v;
 
-        mesh.updateVertices(index * vsize * 6, vertices);
+        meshes[col][row].updateVertices(index * vsize * 6, vertices);
     }
 
-    public void draw(int index, TextureRegion region, float x, float y, float w, float h, float rotation){
+    public void draw(int col, int row, int index, TextureRegion region, float x, float y, float w, float h, float rotation){
         float u = region.u;
         float v = region.v2;
         float u2 = region.u2;
@@ -186,35 +201,51 @@ public class IndexedRenderer implements Disposable{
         vertices[idx++] = u;
         vertices[idx++] = v;
 
-        mesh.updateVertices(index * vsize * 6, vertices);
+        meshes[col][row].updateVertices(index * vsize * 6, vertices);
     }
 
-    public Mat getTransformMatrix(){
-        return transMatrix;
+    public Mat getTransformMatrix(int col, int row){
+        return transMatrices[col][row];
     }
 
-    public void setProjectionMatrix(Mat matrix){
-        projMatrix = matrix;
+    public void setProjectionMatrix(int col, int row, Mat matrix){
+        projMatrices[col][row] = matrix;
     }
 
     public void resize(int sprites){
-        if(mesh != null) mesh.dispose();
+        this.meshes = new Mesh[this.numChunkCol][this.numChunkRow];
 
-        mesh = new Mesh(true, 6 * sprites, 0,
-        VertexAttribute.position,
-        VertexAttribute.color,
-        VertexAttribute.texCoords);
-        vertices = new float[6 * sprites * vsize];
-        mesh.setVertices(vertices);
+        for(int x = 0; x < this.numChunkCol; x++){
+            for(int y = 0; y < this.numChunkRow; y++){
+                if(this.meshes[x][y] != null) this.meshes[x][y].dispose();
+                this.meshes[x][y] = new Mesh(true, 6 * sprites, 0,
+                        VertexAttribute.position,
+                        VertexAttribute.color,
+                        VertexAttribute.texCoords);
+                this.meshes[x][y].setVertices(new float[6 * sprites * vsize]);
+            }
+        }
     }
 
-    private void updateMatrix(){
-        combined.set(projMatrix).mul(transMatrix);
+    private void updateMatrix(int col, int row){
+        combineds[col][row].set(projMatrices[col][row]).mul(transMatrices[col][row]);
     }
 
     @Override
     public void dispose(){
-        mesh.dispose();
+        for(int x = 0; x < this.numChunkCol; x++) {
+            for (int y = 0; y < this.numChunkRow; y++) {
+                meshes[x][y].dispose();
+            }
+        }
         program.dispose();
+    }
+
+    public int getNumChunkRow() {
+        return numChunkRow;
+    }
+
+    public int getNumChunkCol() {
+        return numChunkCol;
     }
 }

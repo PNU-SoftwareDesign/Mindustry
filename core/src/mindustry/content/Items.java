@@ -11,85 +11,85 @@ public class Items implements ContentList{
 
     @Override
     public void load(){
-        copper = new Item("copper", Color.valueOf("d99d73")){{
-            hardness = 1;
-            cost = 0.5f;
-            alwaysUnlocked = true;
-        }};
 
-        lead = new Item("lead", Color.valueOf("8c7fa9")){{
-            hardness = 1;
-            cost = 0.7f;
-            alwaysUnlocked = true;
-        }};
+        copper = new Item.ItemBuilder("copper", Color.valueOf("d99d73"))
+                .hardness(1)
+                .cost(0.5f)
+                .alwaysUnlocked(true)
+                .build();
 
-        metaglass = new Item("metaglass", Color.valueOf("ebeef5")){{
-            cost = 1.5f;
-        }};
+        lead = new Item.ItemBuilder("lead", Color.valueOf("8c7fa9"))
+                .hardness(1)
+                .cost(0.7f)
+                .alwaysUnlocked(true)
+                .build();
 
-        graphite = new Item("graphite", Color.valueOf("b2c6d2")){{
-            cost = 1f;
-        }};
+        metaglass = new Item.ItemBuilder("metaglass", Color.valueOf("ebeef5"))
+                .cost(1.5f)
+                .build();
 
-        sand = new Item("sand", Color.valueOf("f7cba4")){{
-            alwaysUnlocked = true;
-            lowPriority = true;
-        }};
+        graphite = new Item.ItemBuilder("graphite", Color.valueOf("b2c6d2"))
+                .cost(1f)
+                .build();
 
-        coal = new Item("coal", Color.valueOf("272727")){{
-            explosiveness = 0.2f;
-            flammability = 1f;
-            hardness = 2;
-        }};
+        sand = new Item.ItemBuilder("sand", Color.valueOf("f7cba4"))
+                .lowPriority(true)
+                .alwaysUnlocked(true)
+                .build();
 
-        titanium = new Item("titanium", Color.valueOf("8da1e3")){{
-            hardness = 3;
-            cost = 1f;
-        }};
+        coal = new Item.ItemBuilder("coal", Color.valueOf("272727"))
+                .explosiveness(0.2f)
+                .flammability(1f)
+                .hardness(2)
+                .build();
 
-        thorium = new Item("thorium", Color.valueOf("f9a3c7")){{
-            explosiveness = 0.2f;
-            hardness = 4;
-            radioactivity = 1f;
-            cost = 1.1f;
-        }};
+        titanium = new Item.ItemBuilder("titanium", Color.valueOf("8da1e3"))
+                .hardness(3)
+                .cost(1f)
+                .build();
 
-        scrap = new Item("scrap", Color.valueOf("777777")){{
+        thorium = new Item.ItemBuilder("thorium", Color.valueOf("f9a3c7"))
+                .hardness(4)
+                .cost(1.1f)
+                .explosiveness(0.2f)
+                .radioactivity(1f)
+                .build();
 
-        }};
+        scrap = new Item.ItemBuilder("scrap", Color.valueOf("777777"))
+                .build();
 
-        silicon = new Item("silicon", Color.valueOf("53565c")){{
-            cost = 0.8f;
-        }};
+        silicon = new Item.ItemBuilder("silicon", Color.valueOf("53565c"))
+                .cost(0.8f)
+                .build();
 
-        plastanium = new Item("plastanium", Color.valueOf("cbd97f")){{
-            flammability = 0.1f;
-            explosiveness = 0.2f;
-            cost = 1.3f;
-        }};
+        plastanium = new Item.ItemBuilder("plastanium", Color.valueOf("cbd97f"))
+                .flammability(0.1f)
+                .explosiveness(0.2f)
+                .cost(1.3f)
+                .build();
 
-        phaseFabric = new Item("phase-fabric", Color.valueOf("f4ba6e")){{
-            cost = 1.3f;
-            radioactivity = 0.6f;
-        }};
+        phaseFabric = new Item.ItemBuilder("phase-fabric", Color.valueOf("f4ba6e"))
+                .cost(1.3f)
+                .radioactivity(0.6f)
+                .build();
 
-        surgeAlloy = new Item("surge-alloy", Color.valueOf("f3e979")){{
-            cost = 1.2f;
-            charge = 0.75f;
-        }};
+        surgeAlloy = new Item.ItemBuilder("surge-alloy", Color.valueOf("f3e979"))
+                .cost(1.2f)
+                .charge(0.75f)
+                .build();
 
-        sporePod = new Item("spore-pod", Color.valueOf("7457ce")){{
-            flammability = 1.15f;
-        }};
+        sporePod = new Item.ItemBuilder("spore-pod", Color.valueOf("7457ce"))
+                .flammability(1.15f)
+                .build();
 
-        blastCompound = new Item("blast-compound", Color.valueOf("ff795e")){{
-            flammability = 0.4f;
-            explosiveness = 1.2f;
-        }};
+        blastCompound = new Item.ItemBuilder("blast-compound", Color.valueOf("ff795e"))
+                .flammability(0.4f)
+                .explosiveness(1.2f)
+                .build();
 
-        pyratite = new Item("pyratite", Color.valueOf("ffaa5f")){{
-            flammability = 1.4f;
-            explosiveness = 0.4f;
-        }};
+        pyratite = new Item.ItemBuilder("pyratite", Color.valueOf("ffaa5f"))
+                .flammability(1.4f)
+                .explosiveness(0.4f)
+                .build();
     }
 }
