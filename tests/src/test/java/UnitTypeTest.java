@@ -1,11 +1,6 @@
-import arc.func.*;
 import mindustry.content.*;
 import mindustry.entities.abilities.*;
-import mindustry.entities.bullet.*;
-import mindustry.gen.*;
-import mindustry.graphics.*;
 import mindustry.type.*;
-import mindustry.type.ammo.*;
 import org.junit.jupiter.api.*;
 
 class UnitTypeTest {
@@ -16,7 +11,7 @@ class UnitTypeTest {
 
     /**
      * Purpose: setStats to render ui
-     * Input:
+     * Input: none
      * Expected: Throws NullPointerException
      */
     @Test
@@ -34,7 +29,7 @@ class UnitTypeTest {
 
     /**
      * Purpose: setStats to render ui
-     * Input:
+     * Input: none
      * Expected: No Throws NullPointerException
      */
     @Test
@@ -53,5 +48,26 @@ class UnitTypeTest {
                 unitType.setStats();
             }
         });
+    }
+
+    /**
+     * Purpose: get requirements list
+     * Input: none
+     * Expected: There is no zero requirements units.
+     */
+    @Test
+    void getTotalRequirementsTest() {
+        UnitType[] unitTypes = {
+        UnitTypes.mace, UnitTypes.dagger, UnitTypes.crawler, UnitTypes.fortress, UnitTypes.scepter, UnitTypes.reign, UnitTypes.vela,
+        UnitTypes.corvus, UnitTypes.atrax,
+        UnitTypes.spiroct, UnitTypes.arkyid, UnitTypes.toxopid,
+        UnitTypes.flare, UnitTypes.eclipse, UnitTypes.horizon, UnitTypes.zenith, UnitTypes.antumbra,
+        UnitTypes.mono, UnitTypes.mega, UnitTypes.quad,
+        UnitTypes.risso, UnitTypes.minke, UnitTypes.sei, UnitTypes.retusa, UnitTypes.cyerce,
+        UnitTypes.navanax
+        };
+        for(UnitType unitType : unitTypes){
+            Assertions.assertNotEquals(unitType.getTotalRequirements().length, 0);
+        }
     }
 }
