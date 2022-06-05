@@ -94,4 +94,51 @@ class LiquidStackTest{
             Assertions.assertEquals(liquidStack, liquidStacks[withStack.indexOf(liquidStack)]);
         });
     }
+
+    /**
+     * Purpose: Check same(semantically) LiquidStack
+     * Input: Object o
+     * Expected: return SUCCESS
+     */
+    @Test
+    void equalsSameObjectTest() {
+        LiquidStack liquidStack = new LiquidStack(Liquids.water, 1);
+        Assertions.assertEquals(liquidStack, liquidStack);
+    }
+
+    /**
+     * Purpose: Check same(semantically) LiquidStack
+     * Input: Object o
+     * Expected: return SUCCESS
+     */
+    @Test
+    void equalsNotSameInstanceTest() {
+        LiquidStack liquidStack = new LiquidStack(Liquids.water, 1);
+        Object itemStack = new ItemStack(Items.sand, 1);
+        Assertions.assertNotEquals(liquidStack, itemStack);
+    }
+
+    /**
+     * Purpose: Check same(semantically) LiquidStack
+     * Input: Object o
+     * Expected: return SUCCESS
+     */
+    @Test
+    void equalsSameInstanceTest() {
+        Object liquidStack1 = new LiquidStack(Liquids.water, 1);
+        Object liquidStack2 = new LiquidStack(Liquids.water, 1);
+        Assertions.assertEquals(liquidStack1, liquidStack2);
+    }
+
+    /**
+     * Purpose: Check same(semantically) LiquidStack
+     * Input: Object o
+     * Expected: return SUCCESS
+     */
+    @Test
+    void equalsSameInstanceNotSameTest() {
+        Object liquidStack1 = new LiquidStack(Liquids.water, 1);
+        Object liquidStack2 = new LiquidStack(Liquids.water, 2);
+        Assertions.assertNotEquals(liquidStack1, liquidStack2);
+    }
 }
