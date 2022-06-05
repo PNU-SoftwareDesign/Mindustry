@@ -30,10 +30,10 @@ class UnitTypeTest {
     /**
      * Purpose: setStats to render ui
      * Input: none
-     * Expected: No Throws NullPointerException
+     * Expected: No Throws Excpetion
      */
     @Test
-    void noAbilitySetStateTest() {
+    void setStateTest() {
         UnitType[] nonAbilityUnits = {
         UnitTypes.mace, UnitTypes.dagger, UnitTypes.crawler, UnitTypes.fortress, UnitTypes.scepter, UnitTypes.reign, UnitTypes.vela,
         UnitTypes.corvus, UnitTypes.atrax,
@@ -41,7 +41,8 @@ class UnitTypeTest {
         UnitTypes.flare, UnitTypes.eclipse, UnitTypes.horizon, UnitTypes.zenith, UnitTypes.antumbra,
         UnitTypes.mono, UnitTypes.mega, UnitTypes.quad, UnitTypes.alpha, UnitTypes.beta, UnitTypes.gamma,
         UnitTypes.risso, UnitTypes.minke, UnitTypes.sei, UnitTypes.retusa, UnitTypes.cyerce,
-        UnitTypes.navanax, UnitTypes.block
+        UnitTypes.navanax, UnitTypes.block,
+        UnitTypes.nova, UnitTypes.pulsar, UnitTypes.quasar, UnitTypes.poly, UnitTypes.oct, UnitTypes.bryde, UnitTypes.omura, UnitTypes.oxynoe, UnitTypes.aegires,
         };
         Assertions.assertDoesNotThrow(() -> {
             for(UnitType unitType : nonAbilityUnits){
