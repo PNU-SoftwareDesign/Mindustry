@@ -1,3 +1,4 @@
+import arc.struct.*;
 import mindustry.content.*;
 import mindustry.type.*;
 import org.junit.jupiter.api.*;
@@ -72,5 +73,25 @@ class LiquidStackTest{
         for (int i = 0; i < liquidStacks.length; ++i) {
             Assertions.assertEquals(withStack[i], liquidStacks[i]);
         }
+    }
+
+    /**
+     * Purpose: Convert list of object to Seq<LiquidStack>
+     * Input: Object[] items
+     * Expected: return SUCCESS
+     */
+    @Test
+    void listTest(){
+        Object[] items = new Object[]{
+        Liquids.water, 5,
+        Liquids.oil, 0,
+        Liquids.cryofluid, -5,
+        Liquids.slag, 1
+        };
+
+        Seq<LiquidStack> withStack = LiquidStack.list(items);
+        withStack.forEach((liquidStack) -> {
+            Assertions.assertEquals(liquidStack, liquidStacks[withStack.indexOf(liquidStack)]);
+        });
     }
 }
